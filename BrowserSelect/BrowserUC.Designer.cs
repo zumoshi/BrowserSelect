@@ -48,12 +48,12 @@
             // 
             // shortcuts
             // 
-            this.shortcuts.AutoSize = true;
-            this.shortcuts.Location = new System.Drawing.Point(90, 147);
+            this.shortcuts.Location = new System.Drawing.Point(3, 147);
             this.shortcuts.Name = "shortcuts";
-            this.shortcuts.Size = new System.Drawing.Size(35, 13);
+            this.shortcuts.Size = new System.Drawing.Size(122, 13);
             this.shortcuts.TabIndex = 2;
             this.shortcuts.Text = "label1";
+            this.shortcuts.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // BrowserUC
             // 
@@ -66,7 +66,6 @@
             this.Size = new System.Drawing.Size(128, 160);
             ((System.ComponentModel.ISupportInitialize)(this.icon)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

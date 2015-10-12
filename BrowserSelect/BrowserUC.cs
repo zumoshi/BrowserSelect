@@ -10,13 +10,13 @@ using System.Windows.Forms;
 namespace BrowserSelect {
     public partial class BrowserUC : UserControl {
         public Browser browser;
-        public BrowserUC(Browser b) {
+        public BrowserUC(Browser b,int index) {
             InitializeComponent();
 
             this.browser = b;
 
             name.Text = b.name;
-            shortcuts.Text = "( " + String.Join(",", b.shortcuts) + " )";
+            shortcuts.Text = "( " + Convert.ToString(index+1) + "," + String.Join(",", b.shortcuts) + " )";
             shortcuts.ForeColor = Color.FromKnownColor(KnownColor.GrayText);
             icon.Image = b.icon.ToBitmap();
             icon.SizeMode = PictureBoxSizeMode.Zoom;

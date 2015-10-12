@@ -17,7 +17,7 @@ namespace BrowserSelect {
         private void Form1_Load(object sender, EventArgs e) {
             int i = 0;
             foreach(var browser in browsers) {
-                var buc = new BrowserUC(browser);
+                var buc = new BrowserUC(browser,i);
                 buc.Left = 128 * i++;
                 buc.Click += browser_click;
                 this.Controls.Add(buc);
@@ -30,6 +30,8 @@ namespace BrowserSelect {
 
             add_button("About", show_about, 0);
             add_button("Settings", show_setting, 1);
+
+            center_me();
         }
 
         private void show_setting(object sender, EventArgs e) {
@@ -82,6 +84,14 @@ namespace BrowserSelect {
         private void Form1_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Escape)
                 Application.Exit();
+        }
+
+        private void center_me() {
+            var wa = Screen.PrimaryScreen.WorkingArea;
+            var left = wa.Width / 2 + wa.Left - Width / 2;
+            var top = wa.Height / 2 + wa.Top - Height / 2;
+            
+            this.Location = new Point(left, top);
         }
     }
 }
