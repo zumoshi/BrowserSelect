@@ -18,13 +18,40 @@ namespace BrowserSelect {
     static class BrowserFinder {
         public static List<Browser> find() {
             List<Browser> browsers = new List<Browser>();
+            //special case , firefox+firefox developer both installed
+            //(only works if firefox installed in default directory)
+            var ff_path = Path.Combine(
+                Program.ProgramFilesx86() ,
+                @"Mozilla Firefox\firefox.exe");
+            if (File.Exists(ff_path))
+                browsers.Add(new Browser()
+                {
+                    name = "FireFox",
+                    exec = ff_path,
+                    icon = IconExtractor.fromFile(ff_path)
+                });
+            //special case , Edge
+            var edge_path = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Windows) ,
+                @"SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\MicrosoftEdge.exe");
+            if (File.Exists(edge_path))
+                browsers.Add(new Browser()
+                {
+                    name="Edge",
+                    //exec=edge_path,
+                    // http://answers.microsoft.com/en-us/insider/forum/insider_internet-insider_spartan/how-to-start-microsoft-edge-from-command-line/25d0ba93-4e8b-41cb-adde-461d8fb58ec1
+                    exec = "edge",
+                    icon =IconExtractor.fromFile(edge_path)
+                });
+
             //gather browsers from registry
             using (RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
                 browsers.AddRange(find(hklm));
             using (RegistryKey hkcu = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry32))
                 browsers.AddRange(find(hkcu));
+
             //remove myself
-            browsers=browsers.Where(x => Path.GetFileName(x.exec).ToLower() !=
+            browsers =browsers.Where(x => Path.GetFileName(x.exec).ToLower() !=
                 Path.GetFileName(Application.ExecutablePath).ToLower()).ToList();
             //remove duplicates
             browsers = browsers.GroupBy(browser => browser.exec)

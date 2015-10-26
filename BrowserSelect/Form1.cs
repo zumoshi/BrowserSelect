@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -67,7 +68,14 @@ namespace BrowserSelect {
         }
 
         private void open_url(Browser b) {
-            System.Diagnostics.Process.Start(b.exec, Program.url);
+            if (b.exec == "edge"){
+                //edge is a universal app , which means we can't just run it like other browsers
+                Process.Start("microsoft-edge:"+Program.url
+                    .Replace(" ","%20")
+                    .Replace("\"", "%22"));
+            }
+            else
+                Process.Start(b.exec, "\""+Program.url.Replace("\"","%22")+"\"");
             Application.Exit();
         }
 
