@@ -18,4 +18,4 @@ it has been tested on windows 8.1 x64 but should work in windows 7 and newer , r
 
 # Download
 
-you can download browser select here : [Browser select v1.0.1 (186KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.0.1/BrowserSelect.exe)
+you can download browser select here : [Browser select v1.0.2 (187KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.0.2/BrowserSelect.exe)
