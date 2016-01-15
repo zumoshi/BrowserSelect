@@ -37,6 +37,7 @@ Section "Dummy Section" SecDummy
   
   ;ADD YOUR OWN FILES HERE...
   File "/oname=BrowserSelect.exe" ".\bin\Release\BrowserSelect.exe"
+  createShortCut "$SMPROGRAMS\BrowserSelect.lnk" "$INSTDIR\BrowserSelect.exe"
   
   ;Store installation folder
   WriteRegStr HKCU "Software\BrowserSelect" "" $INSTDIR
@@ -92,6 +93,7 @@ Section "Uninstall"
 
   Delete "$INSTDIR\Uninstall.exe"
   Delete "$INSTDIR\BrowserSelect.exe"
+  Delete "$SMPROGRAMS\BrowserSelect.lnk"
 
   RMDir "$INSTDIR"
 

@@ -36,8 +36,7 @@ namespace BrowserSelect {
         }
 
         private void show_setting(object sender, EventArgs e) {
-            MessageBox.Show("I failed to come up with anything to be configured.\n" +
-                "The program is pretty straightforward , please submit an issue if you think something should be here.");
+            new frm_settings().ShowDialog();
         }
 
         private void show_about(object sender, EventArgs e) {
