@@ -14,6 +14,10 @@ namespace BrowserSelect {
         public Icon icon;
 
         public List<char> shortcuts { get { return name.Split(new[] { ' ' }).Select(x=>x.Substring(0, 1).ToLower()[0]).ToList(); } }
+        public override string ToString()
+        {
+            return name;
+        }
     }
     static class BrowserFinder {
         public static List<Browser> find() {

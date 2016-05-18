@@ -7,10 +7,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using BrowserSelect.Properties;
 
 namespace BrowserSelect {
     public partial class Form1 : Form {
-        List<Browser> browsers = BrowserFinder.find();
+        List<Browser> browsers = BrowserFinder.find().Where(b => !Settings.Default.HideBrowsers.Contains(b.exec)).ToList();
         public Form1() {
             InitializeComponent();
         }

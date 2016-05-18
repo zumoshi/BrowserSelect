@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Forms;
+using BrowserSelect.Properties;
 
 namespace BrowserSelect {
     static class Program {
@@ -14,6 +16,9 @@ namespace BrowserSelect {
         static void Main(string[] args) {
             if (args.Length > 0)
                 url = args[0];
+
+            if(Settings.Default.HideBrowsers == null)
+                Settings.Default.HideBrowsers = new StringCollection();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
