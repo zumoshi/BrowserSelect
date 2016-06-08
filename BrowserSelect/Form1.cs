@@ -67,7 +67,7 @@ namespace BrowserSelect {
             open_url(uc.browser);
         }
 
-        private void open_url(Browser b) {
+        public static void open_url(Browser b) {
             if (b.exec == "edge"){
                 //edge is a universal app , which means we can't just run it like other browsers
                 Process.Start("microsoft-edge:"+Program.url

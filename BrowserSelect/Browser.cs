@@ -18,6 +18,10 @@ namespace BrowserSelect {
         {
             return name;
         }
+        public static implicit operator Browser(System.String s)
+        {
+            return BrowserFinder.find().Where(b => b.name == s).First();
+        }
     }
     static class BrowserFinder {
         public static List<Browser> find() {

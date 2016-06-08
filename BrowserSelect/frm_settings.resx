@@ -117,4 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label4.Text" xml:space="preserve">
+    <value>You may use wildcards for pattern. e.g. *.yahoo.com or mail.*.net or *.google.*
+you can open browser select manually from startmenu to change the rules. browser select always opens itself when launched from startmenu regardless of Filters added.
+changes will be saved automatically when you close this window , make sure to fill all the fields (pattern and browser) and select another row before closing to make sure it will be saved successfully.</value>
+  </data>
+  <metadata name="pattern.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="browser.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

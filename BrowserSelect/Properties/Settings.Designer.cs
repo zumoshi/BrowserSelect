@@ -33,5 +33,16 @@ namespace BrowserSelect.Properties {
                 this["HideBrowsers"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection AutoBrowser {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["AutoBrowser"]));
+            }
+            set {
+                this["AutoBrowser"] = value;
+            }
+        }
     }
 }

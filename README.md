@@ -14,8 +14,24 @@ to install Download this file than set it as the default browser.
 
 ![select default browser](https://raw.githubusercontent.com/zumoshi/BrowserSelect/master/screenshots/photo_2015-10-12_16-43-08.jpg)
 
-it has been tested on windows 8.1 x64 but should work in windows 7 and newer , requires **.net framework 4**.
+it has been tested on windows 7, windows 8.1 and windows 10. requires **.net framework 4**.
 
 # Download
 
-you can download browser select here : [Browser select v1.1.0 (186KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.1.0/BrowserSelect.exe)
+you can download browser select here : [Browser select v1.2.0 (191KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.2.0/BrowserSelect.exe)
+
+
+
+# Changelog 
+
+v1.2
+- you can now add url patterns to select the browser based on url automatically.
+
+v1.1
+- added option to select browsers that are displayed on the list (and remove/hide some)
+
+v1.0.2
+- added option to set browser select as default browser in settings
+
+v1.0.1
+- added edge browser for windows 10 (it wouldn't show up due edge being a Universal App)
