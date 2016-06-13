@@ -18,11 +18,14 @@ it has been tested on windows 7, windows 8.1 and windows 10. requires **.net fra
 
 # Download
 
-you can download browser select here : [Browser select v1.2.0 (191KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.2.0/BrowserSelect.exe)
+you can download browser select here : [Browser select v1.2.1 (191KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.2.1/BrowserSelect.exe)
 
 
 
 # Changelog 
+
+v1.2.1
+- bugfix for InternetExplorer to open links in a new tab instead of a new window
 
 v1.2
 - you can now add url patterns to select the browser based on url automatically.

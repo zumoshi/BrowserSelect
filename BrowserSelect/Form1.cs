@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using BrowserSelect.Properties;
+using SHDocVw;
 
 namespace BrowserSelect {
     public partial class Form1 : Form {
@@ -70,12 +71,28 @@ namespace BrowserSelect {
         public static void open_url(Browser b) {
             if (b.exec == "edge"){
                 //edge is a universal app , which means we can't just run it like other browsers
-                Process.Start("microsoft-edge:"+Program.url
-                    .Replace(" ","%20")
+                Process.Start("microsoft-edge:" + Program.url
+                    .Replace(" ", "%20")
                     .Replace("\"", "%22"));
+            }else if (b.exec.EndsWith("iexplore.exe")){
+                // IE tends to open in a new window instead of a new tab
+                // code borrowed from http://stackoverflow.com/a/3713470/1461004
+                bool found = false;
+                ShellWindows iExplorerInstances = new ShellWindows();
+                foreach (InternetExplorer iExplorer in iExplorerInstances)
+                {
+                    if (iExplorer.Name.EndsWith("Internet Explorer"))
+                    {
+                        iExplorer.Navigate(Program.url, 0x800);
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                    Process.Start(b.exec, "\"" + Program.url.Replace("\"", "%22") + "\"");
             }
             else
-                Process.Start(b.exec, "\""+Program.url.Replace("\"","%22")+"\"");
+                Process.Start(b.exec, "\"" + Program.url.Replace("\"", "%22") + "\"");
             Application.Exit();
         }
 
