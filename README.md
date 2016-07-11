@@ -18,7 +18,7 @@ it has been tested on windows 7, windows 8.1 and windows 10. requires **.net fra
 
 # Download
 
-you can download browser select here : [Browser select v1.2.1 (197KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.3.0/BrowserSelect.exe)
+you can download browser select here : [Browser select v1.3 (197KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.3.0/BrowserSelect.exe)
 
 
 
