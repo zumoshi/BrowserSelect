@@ -26,6 +26,7 @@
             this.icon = new System.Windows.Forms.PictureBox();
             this.name = new System.Windows.Forms.Label();
             this.shortcuts = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.icon)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,15 +56,26 @@
             this.shortcuts.Text = "label1";
             this.shortcuts.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(0, 161);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(125, 20);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "Always";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // BrowserUC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.shortcuts);
             this.Controls.Add(this.name);
             this.Controls.Add(this.icon);
             this.Name = "BrowserUC";
-            this.Size = new System.Drawing.Size(128, 160);
+            this.Size = new System.Drawing.Size(128, 180);
             ((System.ComponentModel.ISupportInitialize)(this.icon)).EndInit();
             this.ResumeLayout(false);
 
@@ -74,5 +86,6 @@
         private System.Windows.Forms.PictureBox icon;
         private System.Windows.Forms.Label name;
         private System.Windows.Forms.Label shortcuts;
+        private System.Windows.Forms.Button button1;
     }
 }

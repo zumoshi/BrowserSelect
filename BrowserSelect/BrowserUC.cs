@@ -35,5 +35,12 @@ namespace BrowserSelect {
                 }
             }
         }
+
+        public bool Always { get; set; } = false;
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Always = true;
+        }
     }
 }

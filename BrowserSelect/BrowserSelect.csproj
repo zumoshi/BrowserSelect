@@ -66,6 +66,18 @@
     <Compile Include="frm_About.Designer.cs">
       <DependentUpon>frm_About.cs</DependentUpon>
     </Compile>
+    <Compile Include="frm_help_main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_help_main.Designer.cs">
+      <DependentUpon>frm_help_main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_help_rules.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_help_rules.Designer.cs">
+      <DependentUpon>frm_help_rules.cs</DependentUpon>
+    </Compile>
     <Compile Include="frm_settings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,6 +99,12 @@
     <EmbeddedResource Include="frm_About.resx">
       <DependentUpon>frm_About.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frm_help_main.resx">
+      <DependentUpon>frm_help_main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_help_rules.resx">
+      <DependentUpon>frm_help_rules.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frm_settings.resx">
       <DependentUpon>frm_settings.cs</DependentUpon>
     </EmbeddedResource>
@@ -98,6 +116,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
     <None Include="installer.nsi" />
@@ -114,6 +133,7 @@
   <ItemGroup>
     <Content Include="bs.ico" />
     <Content Include="License.txt" />
+    <None Include="Resources\Button-help-icon.png" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="SHDocVw">

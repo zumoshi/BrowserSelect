@@ -24,5 +24,11 @@ namespace BrowserSelect {
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             System.Diagnostics.Process.Start(((LinkLabel)sender).Text);
         }
+
+        private void frm_About_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                Close();
+        }
     }
 }

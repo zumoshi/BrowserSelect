@@ -102,10 +102,12 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.Name = "frm_About";
             this.Text = "Browser Select: About";
             this.Load += new System.EventHandler(this.frm_About_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frm_About_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

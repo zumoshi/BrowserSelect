@@ -1,7 +1,7 @@
 # Browser Select
 Browser Select is a utility to dynamically select the browser you want instead of just having one default for all links. similar to the prompt in android to choose a browser when a link in a non-browser app is clicked/touched. it may not be useful for everyone but it really helps when you use multiple browsers for different things (e.g. one with proxy and one without) and open many links from other applications (e.g. Messengers).
 
-![screenshot1](https://raw.githubusercontent.com/zumoshi/BrowserSelect/master/screenshots/photo_2015-10-12_16-43-14.jpg)
+![screenshot1](https://raw.githubusercontent.com/zumoshi/BrowserSelect/master/screenshots/photo_2016-07-11 13_44_19.png)
 
 instead of having to copy the link , open desired (non-default) browser than pasting , all you need to do is to click on the link and this prompt will open allowing you to choose the browser you want. it automatically detects installed browsers , and has no need for administrative rights it can be installed and works in a restricted user.
 
@@ -18,11 +18,22 @@ it has been tested on windows 7, windows 8.1 and windows 10. requires **.net fra
 
 # Download
 
-you can download browser select here : [Browser select v1.2.1 (191KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.2.1/BrowserSelect.exe)
+you can download browser select here : [Browser select v1.2.1 (197KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.3.0/BrowserSelect.exe)
 
 
 
 # Changelog 
+
+v1.3
+- Added an "Always" button under browser icons that adds a rule for *.domain.tld
+- Added a help button in the main form
+- made about form closable by Esc key
+- added a help form for the settings page
+- changed how filters are executed to allow simpler use of a match-all pattern
+- added browser select to the list of options when adding rules
+- added an apply button to the settings page for Rules
+- polished the rule adding interface
+- some code Formating/Indenting/Restructuring
 
 v1.2.1
 - bugfix for InternetExplorer to open links in a new tab instead of a new window
