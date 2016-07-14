@@ -41,8 +41,8 @@ namespace BrowserSelect
             // put the domain name in Always open X in... checkbox
             rule_url = new Uri(Program.url).Host;
             var url_parts = rule_url.Split(new[] { '.' });
-            if (url_parts.Length > 2 && url_parts[url_parts.Length - 2].Length > 3)
-                rule_url = url_parts[url_parts.Length - 2] + url_parts[url_parts.Length - 1];
+            if (url_parts.Length > 2 && (url_parts[url_parts.Length - 2].Length <= 2 || !((new[] {"org","net","sch","gov"}).Contains(url_parts[url_parts.Length - 2]))))
+                rule_url = url_parts[url_parts.Length - 2] + "." + url_parts[url_parts.Length - 1];
             rule_url = "*." + rule_url;
 
             //didn't add this after all... (it was a checkbox for issue #9)
