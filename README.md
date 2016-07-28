@@ -18,11 +18,14 @@ it has been tested on windows 7, windows 8.1 and windows 10. requires **.net fra
 
 # Download
 
-you can download browser select here : [Browser select v1.3.1 (197KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.3.1/BrowserSelect.exe)
+you can download browser select here : [Browser select v1.3.2 (198KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.3.2/BrowserSelect.exe)
 
 
 
 # Changelog 
+
+v1.3.2
+- bugfix to bring IE to foreground if it is already open
 
 v1.3.1
 - bugfix for Auto rule creation of domains with subdomains

@@ -126,6 +126,8 @@ namespace BrowserSelect
                     if (iExplorer.Name.EndsWith("Internet Explorer"))
                     {
                         iExplorer.Navigate(Program.url, 0x800);
+                        // for issue #10 (bring IE to focus after opening link)
+                        ForegroundAgent.RestoreWindow(iExplorer.HWND);
                         found = true;
                         break;
                     }
