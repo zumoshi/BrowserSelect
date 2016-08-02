@@ -134,6 +134,7 @@
   <ItemGroup>
     <Content Include="bs.ico" />
     <Content Include="License.txt" />
+    <None Include="Resources\bitcoin.png" />
     <None Include="Resources\Button-help-icon.png" />
   </ItemGroup>
   <ItemGroup>

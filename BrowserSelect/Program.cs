@@ -29,6 +29,10 @@ namespace BrowserSelect
             {
                 //check to see if auto select rules match
                 url = args[0];
+                //add http:// to url if it is missing a protocol
+                var uri = new UriBuilder(url).Uri;
+                url = uri.ToString();
+
                 foreach (var sr in Settings.Default.AutoBrowser.Cast<string>()
                     // maybe i should use a better way to split the pattern and browser name ?
                     .Select(x=>x.Split(new[] { "[#!][$~][?_]" }, StringSplitOptions.None))
@@ -39,7 +43,7 @@ namespace BrowserSelect
                     var browser = sr[1];
 
                     // matching the domain to pattern
-                    if (DoesDomainMatchPattern(new Uri(url).Host, pattern))
+                    if (DoesDomainMatchPattern(uri.Host, pattern))
                     {
                         // ignore the display browser select entry to prevent app running itself
                         if (browser != "display BrowserSelect")

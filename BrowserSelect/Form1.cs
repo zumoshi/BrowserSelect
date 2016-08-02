@@ -166,6 +166,7 @@ namespace BrowserSelect
             var top = wa.Height / 2 + wa.Top - Height / 2;
 
             this.Location = new Point(left, top);
+            this.Activate();
         }
 
         private void btn_help_Click(object sender, EventArgs e)

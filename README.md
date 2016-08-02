@@ -18,11 +18,53 @@ it has been tested on windows 7, windows 8.1 and windows 10. requires **.net fra
 
 # Download
 
-you can download browser select here : [Browser select v1.3.2 (198KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.3.2/BrowserSelect.exe)
+you can download browser select here : [Browser select v1.3.3 (200KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.3.3/BrowserSelect.exe)
+
+[![100% safe Award from softpedia](http://s1.softpedia-static.com/_img/sp100free.png?1)](http://www.softpedia.com/get/Internet/Browsers/Browser-Select.shtml#status)
 
 
+# Related links
+
+http://alternativeto.net/software/browser-select/
+
+http://www.snapfiles.com/get/browserselect.html
+
+http://www.softpedia.com/get/Internet/Browsers/Browser-Select.shtml
+
+# ToDo
+
+just a list of some ideas that can be integrated into BrowserSelect.
+- [ ] Make Settings persist across updates
+- [ ] Shift-Click to open link in incognito/private mode
+- [ ] Option to display running browsers only
+- [ ] More Auto-Select rule options
+    - [ ] based on source application
+	- [ ] based on file extension
+	- [ ] based on URL path
+	- [ ] based on keywords
+	- [ ] ignoring the URL as an option
+	- [ ] custom flags to browsers as an option (e.g. incognito mode or disable CSRF)
+- [ ] export/import for rules/settings
+- [ ] Sorting browsers on the list
+- [ ] Custom Shortcuts
+- [ ] Ignoring the rules if Alt key is held down when clicking a link
+- [ ] an API to invoke BrowserSelect
+- [ ] Bugfix for when Browser was launched with Maximize window state (browser select will launch maximized)
+- [ ] A browser extension to launch the correct browser based on the rules even if link is clicked inside a browser
+- [ ] support for portable browsers (adding browsers using a browse button rather than registry)
+- [ ] support for non-browser apps as an option (e.g. download managers)
+- [ ] themes ? or at least an optional transparent Aero glass mode
+- [ ] ability to choose custom icons for browsers
+- [ ] display the unshortened version of adf.ly or goo.gl links when selecting the browser
+- [ ] Localization
+- [ ] handling of other link types (e.g. `mail:` in case you have both outlook and thunderbird installed [or maybe as a sister app])
+- [ ] update checker (not as a popup or messagebox, a tiny icon somewhere on the main form that appears when you don't have the last version)
 
 # Changelog 
+
+v1.3.3
+- fixed a crash on malformed (without protocol) url's
+- added donate button in about page
 
 v1.3.2
 - bugfix to bring IE to foreground if it is already open
