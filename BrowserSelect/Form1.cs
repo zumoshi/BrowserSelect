@@ -42,6 +42,13 @@ namespace BrowserSelect
             // create a wildcard rule for this domain (always button)
             _alwaysRule = generate_rule(Program.url);
 
+            // check for new version
+            if (Settings.Default.last_version != "nope")
+            {
+                btn_help.BackgroundImage = Resources.update_available;
+                btn_help.Click -= btn_help_Click;
+                btn_help.Click += btn_update_click;
+            }
             center_me();
         }
 
@@ -284,6 +291,17 @@ namespace BrowserSelect
         private void btn_help_Click(object sender, EventArgs e)
         {
             (new frm_help_main()).ShowDialog();
+        }
+
+        void btn_update_click(object sender, EventArgs e)
+        {
+            var lv = Settings.Default.last_version;
+            var cv = Application.ProductVersion;
+            cv = cv.Remove(cv.Length - 2);
+            MessageBox.Show(String.Format(
+                "New Update Available!\nCurrent Version: {1}\nLast Version: {0}" +
+                "\nto Update download and install the new version from project's github.",
+                lv, cv));
         }
     }
 }

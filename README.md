@@ -18,7 +18,7 @@ it has been tested on windows 7, windows 8.1 and windows 10. requires **.net fra
 
 # Download
 
-you can download browser select here : [Browser select v1.3.3 (200KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.3.3/BrowserSelect.exe)
+you can download browser select here : [Browser select v1.3.4 (205KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.3.4/BrowserSelect.exe)
 
 [![100% safe Award from softpedia](http://s1.softpedia-static.com/_img/sp100free.png?1)](http://www.softpedia.com/get/Internet/Browsers/Browser-Select.shtml#status)
 
@@ -30,6 +30,8 @@ http://alternativeto.net/software/browser-select/
 http://www.snapfiles.com/get/browserselect.html
 
 http://www.softpedia.com/get/Internet/Browsers/Browser-Select.shtml
+
+http://www.donationcoder.com/forum/index.php?topic=42860.msg401447
 
 # ToDo
 
@@ -58,13 +60,14 @@ just a list of some ideas that can be integrated into BrowserSelect.
 - [ ] display the unshortened version of adf.ly or goo.gl links when selecting the browser
 - [ ] Localization
 - [ ] handling of other link types (e.g. `mail:` in case you have both outlook and thunderbird installed [or maybe as a sister app])
-- [ ] update checker (not as a popup or messagebox, a tiny icon somewhere on the main form that appears when you don't have the last version)
+- [x] update checker (not as a popup or messagebox, a tiny icon somewhere on the main form that appears when you don't have the last version)
 
 # Changelog 
 
 v1.3.4
 - fixed Always button adding rule with wrong pattern for second level domains (e.g. *.com.au for news.com.au)
 - Shift Clicking on browsers now opens the url in incognito/private browsing
+- added an update checker (adds a yellow "New" icon to main window to indicate a new version is available)[disabled by default]
 
 v1.3.3
 - fixed a crash on malformed (without protocol) url's

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrowserSelect.Properties;
 
@@ -23,12 +24,20 @@ namespace BrowserSelect
             {
                 Settings.Default.Upgrade();
                 Settings.Default.UpdateSettings = false;
+                Settings.Default.last_version = "nope";
                 // to prevent nullreference in case settings file did not exist
                 if (Settings.Default.HideBrowsers == null)
                     Settings.Default.HideBrowsers = new StringCollection();
                 if (Settings.Default.AutoBrowser == null)
                     Settings.Default.AutoBrowser = new StringCollection();
                 Settings.Default.Save();
+            }
+            // check for update
+            if (Settings.Default.check_update != "nope" &&
+                DateTime.Now.Subtract(time(Settings.Default.check_update)).TotalDays > 7)
+            {
+                var uc = new UpdateChecker();
+                Task.Factory.StartNew(() => uc.check());
             }
             //checking if a url is being opened or app is ran from start menu (without arguments)
             if (args.Length > 0)
@@ -71,6 +80,28 @@ namespace BrowserSelect
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
+        }
+
+        // from : http://stackoverflow.com/a/250400/1461004
+        public static double time()
+        {
+            return time(DateTime.Now);
+        }
+        public static DateTime time(string unixTimeStamp)
+        {
+            return time(double.Parse(unixTimeStamp));
+        }
+        public static DateTime time(double unixTimeStamp)
+        {
+            // Unix timestamp is seconds past epoch
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+            return dtDateTime;
+        }
+        public static double time(DateTime dateTime)
+        {
+            return (TimeZoneInfo.ConvertTimeToUtc(dateTime) -
+                   new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)).TotalSeconds;
         }
 
 

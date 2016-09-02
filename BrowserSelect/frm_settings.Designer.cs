@@ -38,15 +38,19 @@
             this.gv_filters = new System.Windows.Forms.DataGridView();
             this.pattern = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.browser = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.btn_check_update = new System.Windows.Forms.Button();
+            this.chk_check_update = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gv_filters)).BeginInit();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_setdefault
             // 
-            this.btn_setdefault.Location = new System.Drawing.Point(6, 94);
+            this.btn_setdefault.Location = new System.Drawing.Point(6, 87);
             this.btn_setdefault.Name = "btn_setdefault";
             this.btn_setdefault.Size = new System.Drawing.Size(135, 31);
             this.btn_setdefault.TabIndex = 0;
@@ -65,19 +69,19 @@
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(12, 302);
+            this.label2.Location = new System.Drawing.Point(12, 316);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(150, 70);
+            this.label2.Size = new System.Drawing.Size(150, 56);
             this.label2.TabIndex = 2;
-            this.label2.Text = "if you have suggestions for new options to be added please submit an issue on the" +
-    " project github page and I\'ll see if i can add it.";
+            this.label2.Text = "if you have feature requests,bug reports or suggestions please submit an issue on" +
+    " the project\'s Github.";
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.browser_filter);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(150, 150);
+            this.groupBox1.Size = new System.Drawing.Size(150, 125);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Select Browsers";
@@ -88,7 +92,7 @@
             this.browser_filter.FormattingEnabled = true;
             this.browser_filter.Location = new System.Drawing.Point(3, 16);
             this.browser_filter.Name = "browser_filter";
-            this.browser_filter.Size = new System.Drawing.Size(144, 131);
+            this.browser_filter.Size = new System.Drawing.Size(144, 106);
             this.browser_filter.TabIndex = 0;
             this.browser_filter.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.browser_filter_ItemCheck);
             // 
@@ -96,9 +100,9 @@
             // 
             this.groupBox2.Controls.Add(this.btn_setdefault);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Location = new System.Drawing.Point(15, 165);
+            this.groupBox2.Location = new System.Drawing.Point(15, 143);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(147, 134);
+            this.groupBox2.Size = new System.Drawing.Size(147, 123);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Default Browser";
@@ -201,12 +205,45 @@
             this.browser.Name = "browser";
             this.browser.Width = 51;
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.chk_check_update);
+            this.groupBox4.Controls.Add(this.btn_check_update);
+            this.groupBox4.Location = new System.Drawing.Point(12, 272);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(150, 41);
+            this.groupBox4.TabIndex = 5;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Update checker";
+            // 
+            // btn_check_update
+            // 
+            this.btn_check_update.Location = new System.Drawing.Point(69, 12);
+            this.btn_check_update.Name = "btn_check_update";
+            this.btn_check_update.Size = new System.Drawing.Size(75, 23);
+            this.btn_check_update.TabIndex = 0;
+            this.btn_check_update.Text = "check now";
+            this.btn_check_update.UseVisualStyleBackColor = true;
+            this.btn_check_update.Click += new System.EventHandler(this.btn_check_update_Click);
+            // 
+            // chk_check_update
+            // 
+            this.chk_check_update.AutoSize = true;
+            this.chk_check_update.Location = new System.Drawing.Point(12, 16);
+            this.chk_check_update.Name = "chk_check_update";
+            this.chk_check_update.Size = new System.Drawing.Size(58, 17);
+            this.chk_check_update.TabIndex = 1;
+            this.chk_check_update.Text = "enable";
+            this.chk_check_update.UseVisualStyleBackColor = true;
+            this.chk_check_update.CheckedChanged += new System.EventHandler(this.chk_check_update_CheckedChanged);
+            // 
             // frm_settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btn_cancel;
             this.ClientSize = new System.Drawing.Size(624, 381);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -222,6 +259,8 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gv_filters)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -242,5 +281,8 @@
         private System.Windows.Forms.Button btn_apply;
         private System.Windows.Forms.DataGridViewTextBoxColumn pattern;
         private System.Windows.Forms.DataGridViewComboBoxColumn browser;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.CheckBox chk_check_update;
+        private System.Windows.Forms.Button btn_check_update;
     }
 }

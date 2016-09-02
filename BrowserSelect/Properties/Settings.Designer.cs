@@ -56,5 +56,29 @@ namespace BrowserSelect.Properties {
                 this["UpdateSettings"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("nope")]
+        public string check_update {
+            get {
+                return ((string)(this["check_update"]));
+            }
+            set {
+                this["check_update"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("nope")]
+        public string last_version {
+            get {
+                return ((string)(this["last_version"]));
+            }
+            set {
+                this["last_version"] = value;
+            }
+        }
     }
 }

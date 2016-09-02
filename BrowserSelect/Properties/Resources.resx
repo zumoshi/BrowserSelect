@@ -124,4 +124,7 @@
   <data name="Button-help-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Button-help-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="update_available" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\new-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

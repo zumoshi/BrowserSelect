@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrowserSelect.Properties;
 using Microsoft.Win32;
@@ -47,6 +50,8 @@ namespace BrowserSelect
             var bs = new BindingSource();
             bs.DataSource = rules;
             gv_filters.DataSource = bs;
+
+            chk_check_update.Checked = Settings.Default.check_update != "nope";
         }
 
         private void btn_setdefault_Click(object sender, EventArgs e)
@@ -164,6 +169,43 @@ namespace BrowserSelect
         {
             //close the help window (if it was open)
             _frmHelp?.Close();
+        }
+
+        private void btn_check_update_Click(object sender, EventArgs e)
+        {
+            var btn = ((Button)sender);
+            var uc = new UpdateChecker();
+            // color the button to indicate request, disable it to prevent multiple instances
+            btn.BackColor = Color.Blue;
+            btn.Enabled = false;
+            // run inside a Task to prevent freezing the UI
+            Task.Factory.StartNew(() => uc.check()).ContinueWith(x =>
+            {
+                try
+                {
+                    if (uc.Checked)
+                    {
+                        if (uc.Updated)
+                            MessageBox.Show(String.Format(
+                                "New Update Available!\nCurrent Version: {1}\nLast Version: {0}" +
+                                "\nto Update download and install the new version from project's github.",
+                                uc.LVer, uc.CVer));
+                        else
+                            MessageBox.Show("You are running the lastest version.");
+                    }
+                    else
+                        MessageBox.Show("Unable to check for updates.\nPlease make sure you are connected to internet.");
+                    btn.UseVisualStyleBackColor = true;
+                    btn.Enabled = true;
+                }
+                catch (Exception) { }
+                return x;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        private void chk_check_update_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Default.check_update = (((CheckBox)sender).Checked) ? "0" : "nope";
+            Settings.Default.Save();
         }
     }
     class AutoMatchRule
