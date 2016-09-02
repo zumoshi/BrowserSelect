@@ -95,6 +95,7 @@ Section "Uninstall"
   Delete "$INSTDIR\BrowserSelect.exe"
   Delete "$SMPROGRAMS\BrowserSelect.lnk"
 
+  ; todo: remove user.conf file(s) after asking user
   RMDir "$INSTDIR"
 
   DeleteRegKey /ifempty HKCU "Software\BrowserSelect"

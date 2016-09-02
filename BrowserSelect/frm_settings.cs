@@ -128,6 +128,7 @@ namespace BrowserSelect
             Settings.Default.Save();
             //Enabled property of apply button is used as a flag for unsaved changes
             btn_apply.Enabled = false;
+            btn_cancel.Text = "Close";
         }
 
         private frm_help_rules _frmHelp;
@@ -156,6 +157,7 @@ namespace BrowserSelect
         {
             //set the unsaved changes flag to true
             btn_apply.Enabled = true;
+            btn_cancel.Text = "Cancel";
         }
 
         private void frm_settings_FormClosed(object sender, FormClosedEventArgs e)

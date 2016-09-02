@@ -34,7 +34,7 @@ http://www.softpedia.com/get/Internet/Browsers/Browser-Select.shtml
 # ToDo
 
 just a list of some ideas that can be integrated into BrowserSelect.
-- [ ] Make Settings persist across updates
+- [x] Make Settings persist across updates
 - [ ] Shift-Click to open link in incognito/private mode
 - [ ] Option to display running browsers only
 - [ ] More Auto-Select rule options

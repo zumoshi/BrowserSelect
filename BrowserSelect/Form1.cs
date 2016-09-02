@@ -38,18 +38,129 @@ namespace BrowserSelect
             // add vertical buttons to right of form
             add_button("About", show_about, 0);
             add_button("Settings", show_setting, 1);
-            // put the domain name in Always open X in... checkbox
-            rule_url = new Uri(Program.url).Host;
-            var url_parts = rule_url.Split(new[] { '.' });
-            if (url_parts.Length > 2 && (url_parts[url_parts.Length - 2].Length <= 2 || !((new[] {"org","net","sch","gov"}).Contains(url_parts[url_parts.Length - 2]))))
-                rule_url = url_parts[url_parts.Length - 2] + "." + url_parts[url_parts.Length - 1];
-            rule_url = "*." + rule_url;
 
-            //didn't add this after all... (it was a checkbox for issue #9)
-            //chk_addRule.Text = String.Format(chk_addRule.Text, rule_url);
-            //toolTip1.SetToolTip(chk_addRule,String.Format(toolTip1.GetToolTip(chk_addRule), rule_url));
+            // create a wildcard rule for this domain (always button)
+            _alwaysRule = generate_rule(Program.url);
 
             center_me();
+        }
+
+        // struct used to store patterns created for Always button
+        public struct AmbiguousRule
+        {
+            public string tld_rule;
+            public string second_rule;
+            public int mode;
+        }
+
+        private AmbiguousRule _alwaysRule;
+        private ContextMenu _alwaysAsk;
+        public void add_rule(Browser b)
+        {
+            // check if desired pattern is ambiguous
+            if (_alwaysRule.mode == 3)
+            {
+                // generate a context menu with tld_rule and second_rule as options
+                // and call the overloaded add_rule with pattern as second arg on click
+                _alwaysAsk = new ContextMenu((new[] { _alwaysRule.tld_rule, _alwaysRule.second_rule })
+                    .Select(x => new MenuItem(x, (s, e) => add_rule(b, x))).ToArray());
+                // display the context menu at mouse position
+                _alwaysAsk.Show(this, PointToClient(Cursor.Position));
+            }
+            else if (_alwaysRule.mode == 0)
+            {
+                // in case ambiguousness of pattern was not determined, should not happen
+                MessageBox.Show(String.Format("Error while generating pattern from url." +
+                    " Please include the following url in your bug report:\n{0}",
+                    Program.url));
+            }
+            else
+            {
+                // in case pattern was not ambiguous, just set the pattern as rule and open the url
+                var pat = (_alwaysRule.mode == 1) ? _alwaysRule.tld_rule : _alwaysRule.second_rule;
+                add_rule(b, pat);
+            }
+        }
+
+        public void add_rule(Browser b, string pattern)
+        {
+            save_rule(pattern, b);
+            open_url(b);
+        }
+
+        private void save_rule(string pattern, Browser b)
+        {
+            // save a rule and save app settings
+            Settings.Default.AutoBrowser.Add((new AutoMatchRule()
+            {
+                Pattern = pattern,
+                Browser = b.name
+            }).ToString());
+            Settings.Default.Save();
+        }
+
+        public static AmbiguousRule generate_rule(string url)
+        {
+            /*
+            to solve issue #13
+            there are a lot of second level domains, e.g. domain.info.au, domain.vic.au, ...
+            so we check these rules:
+            if url has only two parts (e.g. x.tld or www.x.tld) choose *.x.tld
+            else if url has 3 parts or more(e.g. y.x.tld) and y!=www:
+                check the following rules: (x = second part after tld)
+                    1.(x is part of domain)
+                        if len(x) > 4: assume that x is not part of extension, and choose  *.x.tld
+                    2.(x is part of extension)
+                        if len(x) <=2 (e.g. y.id.au) than choose *.y.x.tld
+                        if x is in exceptions (com,net,org,edu,gov,asn.sch) choose *.y.x.tld
+                            because many TLD's have second level domains on these, e.g. chap.sch.ir
+                        if count(parts)==4 and first part is www: e.g. www.news.com.au, choose *.y.x.tld
+                if none of the rules apply, the case is ambiguous, display both options in a context menu.
+                    e.g. sealake.vic.au or something.fun.ir
+            */
+
+            // needed variables
+            var domain = new Uri(url).Host;
+            var parts = domain.Split('.');
+            var count = parts.Length;
+            var tld = parts.Last();
+            var x = "";
+            var y = "";
+            try
+            {
+                x = parts[count - 2]; //second-level
+                y = parts[count - 3]; //third-level
+            }
+            catch (IndexOutOfRangeException e) { } // in case domain did not have 3 parts.. (e.g. localhost, google.com)
+
+            // creating the patterns
+            var rule_tld = String.Format("*.{0}.{1}", x, tld);
+            var rule_second = String.Format("*.{0}.{1}.{2}", y, x, tld);
+            var mode = 0; // 0 = error, 1=use rule_tld (*.x.tld), 2=use rule_second (*.y.x.tld), 3=ambiguous
+
+            // this conditions are based on the long comment above
+            if (count == 2 || (count == 3 && y == "www"))
+                mode = 1;
+            else if (count >= 3)
+            {
+                if (x.Length > 4)
+                    mode = 1;
+                else if (
+                    (x.Length <= 2) ||
+                    ((new[] { "com", "net", "org", "edu", "gov", "asn", "sch" }).Contains(x)) ||
+                    (count == 4 && parts[0] == "www")
+                    )
+                    mode = 2;
+                else
+                    mode = 3;
+            }
+
+            return new AmbiguousRule()
+            {
+                tld_rule = rule_tld,
+                second_rule = rule_second,
+                mode = mode
+            };
         }
 
         private void show_setting(object sender, EventArgs e)
@@ -65,6 +176,8 @@ namespace BrowserSelect
         private List<VButton> vbtn = new List<VButton>();
         private void add_button(string text, EventHandler evt, int index)
         {
+            // code for vertical buttons on the right, they are custom controls
+            // without support for form designer, so we initiate them in code
             var btn = new VButton();
             btn.Text = text;
             btn.Anchor = AnchorStyles.Right;
@@ -78,9 +191,10 @@ namespace BrowserSelect
 
             vbtn.Add(btn);
         }
-        
+
         private void browser_click(object sender, EventArgs e)
         {
+            // callback for click event inside the browserControls
             BrowserUC uc;
             if (sender is BrowserUC)
                 uc = (BrowserUC)sender;
@@ -89,21 +203,11 @@ namespace BrowserSelect
             else
                 throw new Exception("this should not happen");
 
+            // check if Always was clicked
             if (uc.Always)
                 add_rule(uc.browser);
-
-            open_url(uc.browser);
-        }
-
-        private string rule_url;
-        public void add_rule(Browser b)
-        {
-            Settings.Default.AutoBrowser.Add((new AutoMatchRule()
-            {
-                Pattern = rule_url,
-                Browser = b.name
-            }).ToString());
-            Settings.Default.Save();
+            else
+                open_url(uc.browser);
         }
 
         public static void open_url(Browser b)
@@ -172,11 +276,6 @@ namespace BrowserSelect
         private void btn_help_Click(object sender, EventArgs e)
         {
             (new frm_help_main()).ShowDialog();
-        }
-
-        private void Form1_Resize(object sender, EventArgs e)
-        {
-            
         }
     }
 }

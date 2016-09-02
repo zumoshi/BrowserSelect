@@ -18,12 +18,18 @@ namespace BrowserSelect
         [STAThread]
         static void Main(string[] args)
         {
-            // to prevent nullreference in case settings file does not exist
-            if (Settings.Default.HideBrowsers == null)
-                Settings.Default.HideBrowsers = new StringCollection();
-            if (Settings.Default.AutoBrowser == null)
-                Settings.Default.AutoBrowser = new StringCollection();
-
+            // to prevent loss of settings when on update
+            if (Settings.Default.UpdateSettings)
+            {
+                Settings.Default.Upgrade();
+                Settings.Default.UpdateSettings = false;
+                // to prevent nullreference in case settings file did not exist
+                if (Settings.Default.HideBrowsers == null)
+                    Settings.Default.HideBrowsers = new StringCollection();
+                if (Settings.Default.AutoBrowser == null)
+                    Settings.Default.AutoBrowser = new StringCollection();
+                Settings.Default.Save();
+            }
             //checking if a url is being opened or app is ran from start menu (without arguments)
             if (args.Length > 0)
             {
@@ -48,6 +54,7 @@ namespace BrowserSelect
                         // ignore the display browser select entry to prevent app running itself
                         if (browser != "display BrowserSelect")
                         {
+                            //todo: handle the case if browser is not found (e.g. imported settings or uninstalled browser)
                             Form1.open_url((Browser)browser);
                             return;
                         }
