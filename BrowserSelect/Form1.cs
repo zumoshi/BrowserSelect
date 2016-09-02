@@ -131,7 +131,7 @@ namespace BrowserSelect
                 x = parts[count - 2]; //second-level
                 y = parts[count - 3]; //third-level
             }
-            catch (IndexOutOfRangeException e) { } // in case domain did not have 3 parts.. (e.g. localhost, google.com)
+            catch (IndexOutOfRangeException) { } // in case domain did not have 3 parts.. (e.g. localhost, google.com)
 
             // creating the patterns
             var rule_tld = String.Format("*.{0}.{1}", x, tld);
@@ -206,12 +206,19 @@ namespace BrowserSelect
             // check if Always was clicked
             if (uc.Always)
                 add_rule(uc.browser);
+            else if (ModifierKeys == Keys.Shift)    // open in incognito
+                open_url(uc.browser, true);
             else
                 open_url(uc.browser);
         }
 
-        public static void open_url(Browser b)
+        public static void open_url(Browser b, bool incognito = false)
         {
+            var args = new List<String>();
+            if (incognito)
+                args.Add(b.private_arg);
+            args.Add(Program.url.Replace("\"", "%22"));
+
             if (b.exec == "edge")
             {
                 //edge is a universal app , which means we can't just run it like other browsers
@@ -219,7 +226,7 @@ namespace BrowserSelect
                     .Replace(" ", "%20")
                     .Replace("\"", "%22"));
             }
-            else if (b.exec.EndsWith("iexplore.exe"))
+            else if (b.exec.EndsWith("iexplore.exe") && !incognito)
             {
                 // IE tends to open in a new window instead of a new tab
                 // code borrowed from http://stackoverflow.com/a/3713470/1461004
@@ -237,10 +244,11 @@ namespace BrowserSelect
                     }
                 }
                 if (!found)
-                    Process.Start(b.exec, "\"" + Program.url.Replace("\"", "%22") + "\"");
+                    Process.Start(b.exec, Program.Args2Str(args));
             }
             else
-                Process.Start(b.exec, "\"" + Program.url.Replace("\"", "%22") + "\"");
+                Process.Start(b.exec, Program.Args2Str(args));
+
             Application.Exit();
         }
 

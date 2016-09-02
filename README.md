@@ -35,7 +35,7 @@ http://www.softpedia.com/get/Internet/Browsers/Browser-Select.shtml
 
 just a list of some ideas that can be integrated into BrowserSelect.
 - [x] Make Settings persist across updates
-- [ ] Shift-Click to open link in incognito/private mode
+- [x] Shift-Click to open link in incognito/private mode
 - [ ] Option to display running browsers only
 - [ ] More Auto-Select rule options
     - [ ] based on source application
@@ -61,6 +61,10 @@ just a list of some ideas that can be integrated into BrowserSelect.
 - [ ] update checker (not as a popup or messagebox, a tiny icon somewhere on the main form that appears when you don't have the last version)
 
 # Changelog 
+
+v1.3.4
+- fixed Always button adding rule with wrong pattern for second level domains (e.g. *.com.au for news.com.au)
+- Shift Clicking on browsers now opens the url in incognito/private browsing
 
 v1.3.3
 - fixed a crash on malformed (without protocol) url's

@@ -41,9 +41,9 @@ namespace BrowserSelect
 
                 foreach (var sr in Settings.Default.AutoBrowser.Cast<string>()
                     // maybe i should use a better way to split the pattern and browser name ?
-                    .Select(x=>x.Split(new[] { "[#!][$~][?_]" }, StringSplitOptions.None))
+                    .Select(x => x.Split(new[] { "[#!][$~][?_]" }, StringSplitOptions.None))
                     // to make sure * doesn't match when non-* rules exist.
-                    .OrderBy(x=> ((x[0].Contains("*"))?1:0) + (x[0]=="*"?1:0)))
+                    .OrderBy(x => ((x[0].Contains("*")) ? 1 : 0) + (x[0] == "*" ? 1 : 0)))
                 {
                     var pattern = sr[0];
                     var browser = sr[1];
@@ -71,6 +71,32 @@ namespace BrowserSelect
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
+        }
+
+
+        public static string Args2Str(List<string> args)
+        {
+            return Args2Str(args.ToArray());
+        }
+        public static string Args2Str(string[] args)
+        {
+            return string.Join(" ", args.Select(Program.EncodeParameterArgument));
+        }
+
+        /// <summary>
+        /// Encodes an argument for passing into a program
+        /// taken from : http://stackoverflow.com/a/12364234/1461004
+        /// </summary>
+        /// <param name="original">The value that should be received by the program</param>
+        /// <returns>The value which needs to be passed to the program for the original value 
+        /// to come through</returns>
+        public static string EncodeParameterArgument(string original)
+        {
+            if (string.IsNullOrEmpty(original))
+                return original;
+            string value = Regex.Replace(original, @"(\\*)" + "\"", @"$1\$0");
+            value = Regex.Replace(value, @"^(.*\s.*?)(\\*)$", "\"$1$2$2\"");
+            return value;
         }
 
         // http://stackoverflow.com/a/194223/1461004

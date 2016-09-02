@@ -126,6 +126,7 @@ in the main page you can see the Url being opened as Title of the window, here y
 2. choose a browser to open the URL in
     you can do this by :
         1. clicking on the browser Icon
+                note: Holding the Shift key while clicking will open the link in incognito mode
         2. pressing any of the letters displayed in parentheses under its icon on keyboard
             (which is its index counting from the left , and first letter of each of its names words)
 3. choose to always open such links in a browser by clicking on "always" button
@@ -133,6 +134,6 @@ in the main page you can see the Url being opened as Title of the window, here y
     go to settings, highlight the rule for that domain, press Delete key on keyboard then press apply
 
 
-if you don't regularly use many browsers but instead open all URLs in one browser but one specific website in another (e.g. firefox for normal use but IE for company website) you can go to settings and add a rule for "*" to open with prefered browser then add separate rules for websites to open in other browsers. refer to "Help" section in settings for more details.</value>
+if you don't regularly use many browsers but instead open all URLs in one browser but one specific website in another (e.g. firefox for normal use but IE for company website) you can go to settings and add a rule for "*" to open with preferred browser then add separate rules for websites to open in other browsers. refer to "Help" section in settings for more details.</value>
   </data>
 </root>
