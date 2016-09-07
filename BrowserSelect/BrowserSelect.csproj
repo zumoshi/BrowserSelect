@@ -54,6 +54,12 @@
     <Compile Include="BrowserUC.Designer.cs">
       <DependentUpon>BrowserUC.cs</DependentUpon>
     </Compile>
+    <Compile Include="ButtonsUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ButtonsUC.Designer.cs">
+      <DependentUpon>ButtonsUC.cs</DependentUpon>
+    </Compile>
     <Compile Include="ForegroundAgent.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -94,6 +100,9 @@
     </Compile>
     <EmbeddedResource Include="BrowserUC.resx">
       <DependentUpon>BrowserUC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ButtonsUC.resx">
+      <DependentUpon>ButtonsUC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

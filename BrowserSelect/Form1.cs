@@ -30,14 +30,14 @@ namespace BrowserSelect
                 this.Controls.Add(buc);
             }
             // resize the form
-            this.Width = i * 128 + 20 + 20;
+            //this.Width = i * 128 + 20 + 20;
+            this.AutoSize = true;
             this.KeyPreview = true;
             this.Text = Program.url;
             // set the form icon from .exe file icon
             this.Icon = IconExtractor.fromFile(Application.ExecutablePath);
             // add vertical buttons to right of form
-            add_button("About", show_about, 0);
-            add_button("Settings", show_setting, 1);
+            this.Controls.Add(new ButtonsUC() { Left = i * 128 });
 
             // create a wildcard rule for this domain (always button)
             _alwaysRule = generate_rule(Program.url);
@@ -168,35 +168,6 @@ namespace BrowserSelect
                 second_rule = rule_second,
                 mode = mode
             };
-        }
-
-        private void show_setting(object sender, EventArgs e)
-        {
-            new frm_settings().ShowDialog();
-        }
-
-        private void show_about(object sender, EventArgs e)
-        {
-            new frm_About().ShowDialog();
-        }
-
-        private List<VButton> vbtn = new List<VButton>();
-        private void add_button(string text, EventHandler evt, int index)
-        {
-            // code for vertical buttons on the right, they are custom controls
-            // without support for form designer, so we initiate them in code
-            var btn = new VButton();
-            btn.Text = text;
-            btn.Anchor = AnchorStyles.Right;
-            btn.Width = 20;
-            btn.Height = 75;
-            btn.Top = index * 80;
-            //btn.Left = this.Width - 35;
-            btn.Left = btn_help.Right - btn.Width;
-            Controls.Add(btn);
-            btn.Click += evt;
-
-            vbtn.Add(btn);
         }
 
         private void browser_click(object sender, EventArgs e)
