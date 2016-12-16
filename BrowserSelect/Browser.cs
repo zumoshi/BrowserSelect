@@ -111,8 +111,13 @@ namespace BrowserSelect
                         // because of the try catch, but there are still things that could go wrong
 
                         //0. check if it can handle the http protocol
-                        if ((string)key.OpenSubKey("Capabilities").OpenSubKey("URLAssociations").GetValue("http") == null)
-                            continue;
+                        var capabilities = key.OpenSubKey("Capabilities");
+                            // IE does not have the capabilities subkey...
+                            // so assume that the app can handle http if it doesn't
+                            // advertise it's capablities
+                        if(capabilities != null)
+                            if ((string)capabilities.OpenSubKey("URLAssociations").GetValue("http") == null)
+                                continue;
                         //1. check if path is not empty
                         if (string.IsNullOrWhiteSpace(exec))
                             continue;
