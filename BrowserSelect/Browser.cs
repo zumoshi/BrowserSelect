@@ -95,26 +95,54 @@ namespace BrowserSelect
         private static List<Browser> find(RegistryKey hklm)
         {
             List<Browser> browsers = new List<Browser>();
-            RegistryKey webClientsRootKey = hklm.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
-            if (webClientsRootKey != null)
-                foreach (var subKeyName in webClientsRootKey.GetSubKeyNames())
-                    if (webClientsRootKey.OpenSubKey(subKeyName) != null)
-                        if (webClientsRootKey.OpenSubKey(subKeyName).OpenSubKey("shell") != null)
-                            if (webClientsRootKey.OpenSubKey(subKeyName).OpenSubKey("shell").OpenSubKey("open") != null)
-                                if (webClientsRootKey.OpenSubKey(subKeyName).OpenSubKey("shell").OpenSubKey("open").OpenSubKey("command") != null)
-                                {
-                                    string commandLineUri = (string)webClientsRootKey.OpenSubKey(subKeyName).OpenSubKey("shell").OpenSubKey("open").OpenSubKey("command").GetValue(null);
-                                    if (string.IsNullOrEmpty(commandLineUri))
-                                        continue;
-                                    commandLineUri = commandLineUri.Trim("\"".ToCharArray());
-                                    browsers.Add(new Browser()
-                                    {
-                                        name = (string)webClientsRootKey.OpenSubKey(subKeyName).GetValue(null),
-                                        exec = commandLineUri,
-                                        //icon = Icon.ExtractAssociatedIcon(commandLineUri)
-                                        icon = IconExtractor.fromFile(commandLineUri)
-                                    });
-                                }
+            // startmenu internet key
+            RegistryKey smi = hklm.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
+            if (smi != null)
+                foreach (var browser in smi.GetSubKeyNames())
+                {
+                    try
+                    {
+                        var key = smi.OpenSubKey(browser);
+                        var name = (string)key.GetValue(null);
+                        var cmd = key.OpenSubKey("shell").OpenSubKey("open").OpenSubKey("command");
+                        var exec = (string)cmd.GetValue(null);
+
+                        // by this point if registry is missing keys we are alreay out of here
+                        // because of the try catch, but there are still things that could go wrong
+
+                        //0. check if it can handle the http protocol
+                        if ((string)key.OpenSubKey("Capabilities").OpenSubKey("URLAssociations").GetValue("http") == null)
+                            continue;
+                        //1. check if path is not empty
+                        if (string.IsNullOrWhiteSpace(exec))
+                            continue;
+
+                        //1.1. remove possible "%1" from the end
+                        exec = exec.Replace("\"%1\"", "");
+                        //1.2. remove possible quotes around address
+                        exec = exec.Trim("\"".ToCharArray());
+                        //2. check if path is valid
+                        if (!File.Exists(exec))
+                            continue;
+                        //3. check if name is valid
+                        if (string.IsNullOrWhiteSpace(name))
+                            name = Path.GetFileNameWithoutExtension(exec);
+
+                        browsers.Add(new Browser()
+                        {
+                            name = name,
+                            exec = exec,
+                            icon = IconExtractor.fromFile(exec)
+                        });
+                    }
+                    catch (NullReferenceException)
+                    {
+                    } // incomplete registry record for browser, ignore it
+                    catch (Exception ex)
+                    {
+                        // todo: log errors
+                    }
+                }
             return browsers;
         }
     }

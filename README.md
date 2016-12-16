@@ -18,20 +18,28 @@ it has been tested on windows 7, windows 8.1 and windows 10. requires **.net fra
 
 # Download
 
-you can download browser select here : [Browser select v1.3.4 (205KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.3.4/BrowserSelect.exe)
+you can download browser select here : [Browser select v1.3.5 (205KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.3.5/BrowserSelect.exe)
 
 [![100% safe Award from softpedia](http://s1.softpedia-static.com/_img/sp100free.png?1)](http://www.softpedia.com/get/Internet/Browsers/Browser-Select.shtml#status)
 
 
 # Related links
 
-http://alternativeto.net/software/browser-select/
+[AlternativeTo](http://alternativeto.net/software/browser-select/)
 
-http://www.snapfiles.com/get/browserselect.html
+Reviews: [TrishTech](http://www.trishtech.com/2016/07/use-different-browsers-for-different-links-with-browserselect/)
+[DonationCoder](http://www.donationcoder.com/forum/index.php?topic=42860.msg401447)
 
-http://www.softpedia.com/get/Internet/Browsers/Browser-Select.shtml
+Download Mirrors: 
+[GitHub](https://github.com/zumoshi/BrowserSelect/releases/latest)
+[SoftPedia](http://www.softpedia.com/get/Internet/Browsers/Browser-Select.shtml)
+[SnapFiles](http://www.snapfiles.com/get/browserselect.html)
+[FindmySoft](http://browserselect.findmysoft.com/)
+[browserss](http://browserss.ru/m.browser-select.php)
+[ComputerBild](http://www.computerbild.de/download/BrowserSelect-15967517.html)
 
-http://www.donationcoder.com/forum/index.php?topic=42860.msg401447
+Note: Mirror's may have outdated versions of browserSelect. you can always download the latest version [here](https://github.com/zumoshi/BrowserSelect/releases).
+
 
 # ToDo
 
@@ -61,25 +69,29 @@ just a list of some ideas that can be integrated into BrowserSelect.
 - [ ] Localization
 - [ ] handling of other link types (e.g. `mail:` in case you have both outlook and thunderbird installed [or maybe as a sister app])
 - [x] update checker (not as a popup or messagebox, a tiny icon somewhere on the main form that appears when you don't have the last version)
+- [ ] add file associations (e.g. .url files, or .html files)
 
-# Changelog 
+# Changelog
 
-v1.3.4
+v1.3.5 [16/12/16]
+- fixed crash on startup caused by incompatible/incomplete registry keys (issues #17,#20,#21)
+
+v1.3.4 [02/09/16]
 - fixed Always button adding rule with wrong pattern for second level domains (e.g. *.com.au for news.com.au)
 - Shift Clicking on browsers now opens the url in incognito/private browsing
 - added an update checker (adds a yellow "New" icon to main window to indicate a new version is available)[disabled by default]
 
-v1.3.3
+v1.3.3 [03/08/16]
 - fixed a crash on malformed (without protocol) url's
 - added donate button in about page
 
-v1.3.2
+v1.3.2 [28/07/16]
 - bugfix to bring IE to foreground if it is already open
 
-v1.3.1
+v1.3.1 [14/07/16]
 - bugfix for Auto rule creation of domains with subdomains
 
-v1.3
+v1.3 [11/07/16]
 - Added an "Always" button under browser icons that adds a rule for *.domain.tld
 - Added a help button in the main form
 - made about form closable by Esc key
@@ -90,17 +102,17 @@ v1.3
 - polished the rule adding interface
 - some code Formating/Indenting/Restructuring
 
-v1.2.1
+v1.2.1 [14/06/16]
 - bugfix for InternetExplorer to open links in a new tab instead of a new window
 
-v1.2
+v1.2 [08/06/16]
 - you can now add url patterns to select the browser based on url automatically.
 
-v1.1
+v1.1 [18/05/16]
 - added option to select browsers that are displayed on the list (and remove/hide some)
 
-v1.0.2
+v1.0.2 [15/01/16]
 - added option to set browser select as default browser in settings
 
-v1.0.1
+v1.0.1 [27/10/15]
 - added edge browser for windows 10 (it wouldn't show up due edge being a Universal App)

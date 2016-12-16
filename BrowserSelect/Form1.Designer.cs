@@ -36,7 +36,7 @@
             this.btn_help.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btn_help.FlatAppearance.BorderSize = 0;
             this.btn_help.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_help.Location = new System.Drawing.Point(469, 155);
+            this.btn_help.Location = new System.Drawing.Point(97, 155);
             this.btn_help.Name = "btn_help";
             this.btn_help.Size = new System.Drawing.Size(25, 25);
             this.btn_help.TabIndex = 0;
@@ -48,7 +48,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(496, 181);
+            this.ClientSize = new System.Drawing.Size(124, 181);
             this.Controls.Add(this.btn_help);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "Form1";
