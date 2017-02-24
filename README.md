@@ -27,7 +27,8 @@ you can download browser select here : [Browser select v1.3.5 (205KB)](https://g
 
 [AlternativeTo](http://alternativeto.net/software/browser-select/)
 
-Reviews: [TrishTech](http://www.trishtech.com/2016/07/use-different-browsers-for-different-links-with-browserselect/)
+Reviews: [DSTech](http://dipendrashekhawat.com/choose-specific-browser-every-time-you-open-a-link/)
+[TrishTech](http://www.trishtech.com/2016/07/use-different-browsers-for-different-links-with-browserselect/)
 [DonationCoder](http://www.donationcoder.com/forum/index.php?topic=42860.msg401447)
 
 Download Mirrors: 
