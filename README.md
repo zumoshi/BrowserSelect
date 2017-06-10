@@ -18,7 +18,7 @@ it has been tested on windows 7, windows 8.1 and windows 10. requires **.net fra
 
 # Download
 
-you can download browser select here : [Browser select v1.3.5 (205KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.3.5/BrowserSelect.exe)
+you can download browser select here : [Browser select v1.3.6 (205KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.3.6/BrowserSelect.exe)
 
 [![100% safe Award from softpedia](http://s1.softpedia-static.com/_img/sp100free.png?1)](http://www.softpedia.com/get/Internet/Browsers/Browser-Select.shtml#status)
 
@@ -73,6 +73,9 @@ just a list of some ideas that can be integrated into BrowserSelect.
 - [ ] add file associations (e.g. .url files, or .html files)
 
 # Changelog
+
+v1.3.6 [11/06/17]
+- BrowserSelect's window now shows up in the monitor with the mouse cursor instead of the default one (#22)
 
 v1.3.5 [16/12/16]
 - fixed crash on startup caused by incompatible/incomplete registry keys (issues #17,#20,#21)

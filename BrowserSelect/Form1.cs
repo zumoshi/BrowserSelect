@@ -251,7 +251,7 @@ namespace BrowserSelect
 
         private void center_me()
         {
-            var wa = Screen.PrimaryScreen.WorkingArea;
+            var wa = Screen.FromPoint(new Point(Cursor.Position.X, Cursor.Position.Y)).WorkingArea;
             var left = wa.Width / 2 + wa.Left - Width / 2;
             var top = wa.Height / 2 + wa.Top - Height / 2;
 
