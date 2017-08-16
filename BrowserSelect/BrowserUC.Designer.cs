@@ -70,12 +70,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.Controls.Add(this.button1);
             this.Controls.Add(this.shortcuts);
             this.Controls.Add(this.name);
             this.Controls.Add(this.icon);
             this.Name = "BrowserUC";
-            this.Size = new System.Drawing.Size(128, 180);
+            this.Size = new System.Drawing.Size(131, 184);
             ((System.ComponentModel.ISupportInitialize)(this.icon)).EndInit();
             this.ResumeLayout(false);
 

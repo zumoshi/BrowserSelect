@@ -16,6 +16,10 @@ namespace BrowserSelect
             InitializeComponent();
             add_button("About", show_about, 0);
             add_button("Settings", show_setting, 1);
+
+            // http://www.telerik.com/blogs/winforms-scaling-at-large-dpi-settings-is-it-even-possible-
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         }
 
         private void show_setting(object sender, EventArgs e)

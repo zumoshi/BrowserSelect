@@ -20,12 +20,14 @@ namespace BrowserSelect
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            int width = 128;
             // add browserUC objects to the form
             int i = 0;
             foreach (var browser in browsers)
             {
                 var buc = new BrowserUC(browser, i);
-                buc.Left = 128 * i++;
+                width = buc.Width;  // buc.Width = 128*dpi Scale
+                buc.Left = width * i++;
                 buc.Click += browser_click;
                 this.Controls.Add(buc);
             }
@@ -37,7 +39,7 @@ namespace BrowserSelect
             // set the form icon from .exe file icon
             this.Icon = IconExtractor.fromFile(Application.ExecutablePath);
             // add vertical buttons to right of form
-            this.Controls.Add(new ButtonsUC() { Left = i * 128 });
+            this.Controls.Add(new ButtonsUC() { Left = i * width });
 
             // create a wildcard rule for this domain (always button)
             _alwaysRule = generate_rule(Program.url);
