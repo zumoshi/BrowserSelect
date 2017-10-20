@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,6 +20,8 @@ namespace BrowserSelect
         [STAThread]
         static void Main(string[] args)
         {
+            // fix #28
+            LeaveDotsAndSlashesEscaped();
             // to prevent loss of settings when on update
             if (Settings.Default.UpdateSettings)
             {
@@ -46,7 +49,7 @@ namespace BrowserSelect
                 url = args[0];
                 //add http:// to url if it is missing a protocol
                 var uri = new UriBuilder(url).Uri;
-                url = uri.ToString();
+                url = uri.AbsoluteUri;
 
                 foreach (var sr in Settings.Default.AutoBrowser.Cast<string>()
                     // maybe i should use a better way to split the pattern and browser name ?
@@ -182,5 +185,26 @@ namespace BrowserSelect
             return regex.IsMatch(originalString);
         }
 
+        // https://stackoverflow.com/a/7202560/1461004
+        private static void LeaveDotsAndSlashesEscaped()
+        {
+            var getSyntaxMethod =
+                typeof(UriParser).GetMethod("GetSyntax", BindingFlags.Static | BindingFlags.NonPublic);
+            if (getSyntaxMethod == null)
+            {
+                throw new MissingMethodException("UriParser", "GetSyntax");
+            }
+
+            var uriParser = getSyntaxMethod.Invoke(null, new object[] { "http" });
+
+            var setUpdatableFlagsMethod =
+                uriParser.GetType().GetMethod("SetUpdatableFlags", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (setUpdatableFlagsMethod == null)
+            {
+                throw new MissingMethodException("UriParser", "SetUpdatableFlags");
+            }
+
+            setUpdatableFlagsMethod.Invoke(uriParser, new object[] { 0 });
+        }
     }
 }
