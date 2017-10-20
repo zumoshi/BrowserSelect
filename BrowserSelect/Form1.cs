@@ -126,6 +126,8 @@ namespace BrowserSelect
                         if count(parts)==4 and first part is www: e.g. www.news.com.au, choose *.y.x.tld
                 if none of the rules apply, the case is ambiguous, display both options in a context menu.
                     e.g. sealake.vic.au or something.fun.ir
+            else if url has only one part (#27):
+                add *.x
             */
 
             // needed variables
@@ -162,6 +164,11 @@ namespace BrowserSelect
                     mode = 2;
                 else
                     mode = 3;
+            }
+            else if (count == 1)
+            {
+                mode = 1;
+                rule_tld = "*." + tld;
             }
 
             return new AmbiguousRule()

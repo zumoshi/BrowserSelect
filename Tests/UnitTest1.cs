@@ -23,7 +23,8 @@ namespace Tests
                 new[]{"http://news.vic.au", "amg"},
                 new[]{"http://www.news.vic.au", "*.news.vic.au"},
                 new[]{"http://www.something.info.au", "*.something.info.au"},
-                new[]{"http://something.id.au", "*.something.id.au"}
+                new[]{"http://something.id.au", "*.something.id.au"},
+                new[]{"http://localhost", "*.localhost"}
             });
             foreach (var test in tests)
             {
