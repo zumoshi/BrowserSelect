@@ -193,7 +193,7 @@ namespace BrowserSelect
             // check if Always was clicked
             if (uc.Always)
                 add_rule(uc.browser);
-            else if (ModifierKeys == Keys.Shift)    // open in incognito
+            else if ((ModifierKeys & Keys.Shift) != 0 || (ModifierKeys & Keys.Alt) != 0)    // open in incognito
                 open_url(uc.browser, true);
             else
                 open_url(uc.browser);

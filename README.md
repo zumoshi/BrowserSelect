@@ -75,7 +75,8 @@ just a list of some ideas that can be integrated into BrowserSelect.
 # Changelog
 
 v1.3.9 [06/04/18]
-- Fixed Edge private mode
+- Fixed Edge private mode (#34)
+- Added Alt as alternative to shift for open in private/incognito mode (#33)
 
 v1.3.8 [20/10/17]
 - Fixed pattern generator for single part domains (e.g. localhost) (issue #27)
