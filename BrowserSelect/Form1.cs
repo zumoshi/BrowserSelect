@@ -206,14 +206,7 @@ namespace BrowserSelect
                 args.Add(b.private_arg);
             args.Add(Program.url.Replace("\"", "%22"));
 
-            if (b.exec == "edge")
-            {
-                //edge is a universal app , which means we can't just run it like other browsers
-                Process.Start("microsoft-edge:" + Program.url
-                    .Replace(" ", "%20")
-                    .Replace("\"", "%22"));
-            }
-            else if (b.exec.EndsWith("iexplore.exe") && !incognito)
+            if (b.exec.EndsWith("iexplore.exe") && !incognito)
             {
                 // IE tends to open in a new window instead of a new tab
                 // code borrowed from http://stackoverflow.com/a/3713470/1461004

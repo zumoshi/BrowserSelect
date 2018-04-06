@@ -26,6 +26,8 @@ namespace BrowserSelect
                     return "-newprivatetab";
                 if (file.Contains("iexplore"))
                     return "-private";
+                if (file.Contains("edge"))
+                    return "-private";
                 return "-private-window";  // FF
             }
         }
@@ -71,9 +73,8 @@ namespace BrowserSelect
                 browsers.Add(new Browser()
                 {
                     name = "Edge",
-                    //exec=edge_path,
-                    // http://answers.microsoft.com/en-us/insider/forum/insider_internet-insider_spartan/how-to-start-microsoft-edge-from-command-line/25d0ba93-4e8b-41cb-adde-461d8fb58ec1
-                    exec = "edge",
+                    // #34
+                    exec = "shell:AppsFolder\\Microsoft.MicrosoftEdge_8wekyb3d8bbwe!MicrosoftEdge",
                     icon = IconExtractor.fromFile(edge_path)
                 });
 
