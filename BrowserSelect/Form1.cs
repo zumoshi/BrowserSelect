@@ -204,6 +204,8 @@ namespace BrowserSelect
             var args = new List<String>();
             if (incognito)
                 args.Add(b.private_arg);
+            if (b.exec.ToLower().EndsWith("brave.exe"))
+                args.Add("--");
             args.Add(Program.url.Replace("\"", "%22"));
 
             if (b.exec.EndsWith("iexplore.exe") && !incognito)
