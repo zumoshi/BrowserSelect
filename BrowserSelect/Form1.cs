@@ -201,7 +201,9 @@ namespace BrowserSelect
 
         public static void open_url(Browser b, bool incognito = false)
         {
-            var args = new List<String>();
+            var args = new List<string>();
+            if (b.exec.ToLower().EndsWith("chrome.exe") && !String.IsNullOrEmpty(b.additionalArgs))
+                args.Add(b.additionalArgs);
             if (incognito)
                 args.Add(b.private_arg);
             if (b.exec.ToLower().EndsWith("brave.exe"))
@@ -226,11 +228,19 @@ namespace BrowserSelect
                     }
                 }
                 if (!found)
+                {
+                    Console.WriteLine("exec: " + b.exec);
+                    Console.WriteLine("args: " + Program.Args2Str(args));
                     Process.Start(b.exec, Program.Args2Str(args));
+                }
             }
             else
-                Process.Start(b.exec, Program.Args2Str(args));
-
+            {
+                string ArgAsString = Program.Args2Str(args);
+                Console.WriteLine("exec: " + b.exec);
+                Console.WriteLine("args: " + ArgAsString);
+                Process.Start(b.exec, ArgAsString);
+            }
             Application.Exit();
         }
 
