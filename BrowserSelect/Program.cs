@@ -12,7 +12,7 @@ namespace BrowserSelect
 {
     static class Program
     {
-        public static string url = "http://google.com/";
+        public static string url = "https://www.golem.de/";
 
         /// <summary>
         /// The main entry point for the application.
