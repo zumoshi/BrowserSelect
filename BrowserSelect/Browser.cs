@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
 
 namespace BrowserSelect
 {
@@ -38,7 +39,8 @@ namespace BrowserSelect
         {
             get
             {
-                return name.Split(new[] { ' ' }).Select(x => x.Substring(0, 1).ToLower()[0]).ToList();
+                // a one liner it is
+                return Regex.Replace(this.name, @"[^A-Za-z\s]", "").Split(new[] { ' ' }).Select(x => x.Substring(0, 1).ToLower()[0]).ToList();
             }
         }
         public override string ToString()

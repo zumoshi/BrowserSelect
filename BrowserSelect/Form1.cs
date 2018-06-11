@@ -202,7 +202,7 @@ namespace BrowserSelect
         public static void open_url(Browser b, bool incognito = false)
         {
             var args = new List<string>();
-            if (b.exec.ToLower().EndsWith("chrome.exe") && !String.IsNullOrEmpty(b.additionalArgs))
+            if (!String.IsNullOrEmpty(b.additionalArgs))
                 args.Add(b.additionalArgs);
             if (incognito)
                 args.Add(b.private_arg);
