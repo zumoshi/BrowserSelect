@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 
 namespace BrowserSelect
 {
@@ -14,6 +15,7 @@ namespace BrowserSelect
         public string name;
         public string exec;
         public Icon icon;
+        public string additionalArgs="";
 
         public string private_arg
         {
@@ -90,9 +92,51 @@ namespace BrowserSelect
             //remove duplicates
             browsers = browsers.GroupBy(browser => browser.exec)
                 .Select(group => group.First()).ToList();
+            //Check for Chrome Profiles
+            Browser BrowserChrome = browsers.FirstOrDefault(x => x.name == "Google Chrome");
+            if (BrowserChrome != null)
+            {
+                string ChromeUserDataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Google\Chrome\User Data");
+                List<string> ChromeProfiles = FindChromeProfiles(ChromeUserDataDir);
+                            
+                if (ChromeProfiles.Count > 1)
+                {
+                    //add the Chrome instances and remove the default one
+                    foreach (string Profile in ChromeProfiles)
+                    {
+                        browsers.Add(new Browser()
+                        {
+                            name = "Chrome (" + GetChromeProfileName(ChromeUserDataDir + "\\" + Profile) + ")",
+                            exec = BrowserChrome.exec,
+                            icon = IconExtractor.fromFile(ChromeUserDataDir + "\\" + Profile + "\\Google Profile.ico"),
+                            additionalArgs = String.Format("--profile-directory={0}", Profile)
+                        });
+                    }
+                    browsers.Remove(BrowserChrome);
+                    browsers = browsers.OrderBy(x => x.name).ToList();
+                }
+            }
 
             return browsers;
         }
+
+        private static string GetChromeProfileName(string FullProfilePath)
+        {
+            dynamic ProfilePreferences = JObject.Parse(File.ReadAllText(FullProfilePath + @"\Preferences"));
+            return ProfilePreferences.profile.name;
+        }
+
+        private static List<string> FindChromeProfiles(string ChromeUserDataDir)
+        {
+            List<string> Profiles = new List<string>();
+            var ProfileDirs = Directory.GetFiles(ChromeUserDataDir, "Google Profile.ico", SearchOption.AllDirectories).Select(Path.GetDirectoryName);
+            foreach(var Profile in ProfileDirs)
+            {
+                Profiles.Add(Profile.Substring(ChromeUserDataDir.Length+1));
+            }
+            return Profiles;
+        }
+
         private static List<Browser> find(RegistryKey hklm)
         {
             List<Browser> browsers = new List<Browser>();
