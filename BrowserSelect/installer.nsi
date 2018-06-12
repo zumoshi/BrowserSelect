@@ -37,6 +37,7 @@ Section "Dummy Section" SecDummy
   
   ;ADD YOUR OWN FILES HERE...
   File "/oname=BrowserSelect.exe" ".\bin\Release\BrowserSelect.exe"
+  File "/oname=Newtonsoft.Json.dll" ".\bin\Release\Newtonsoft.Json.dll"
   createShortCut "$SMPROGRAMS\BrowserSelect.lnk" "$INSTDIR\BrowserSelect.exe"
   
   ;Store installation folder
@@ -93,6 +94,7 @@ Section "Uninstall"
 
   Delete "$INSTDIR\Uninstall.exe"
   Delete "$INSTDIR\BrowserSelect.exe"
+  Delete "$INSTDIR\Newtonsoft.Json.dll"
   Delete "$SMPROGRAMS\BrowserSelect.lnk"
 
   ; todo: remove user.conf file(s) after asking user
