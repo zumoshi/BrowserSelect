@@ -18,7 +18,7 @@ it has been tested on windows 7, windows 8.1 and windows 10. requires **.net fra
 
 # Download
 
-you can download browser select here : [Browser select v1.3.9 (205KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.3.9/BrowserSelect.exe)
+you can download browser select here : [Browser select v1.4.0 (411KB)](https://github.com/zumoshi/BrowserSelect/releases/download/1.4.0/BrowserSelect.exe)
 
 [![100% safe Award from softpedia](http://s1.softpedia-static.com/_img/sp100free.png?1)](http://www.softpedia.com/get/Internet/Browsers/Browser-Select.shtml#status)
 
@@ -73,6 +73,11 @@ just a list of some ideas that can be integrated into BrowserSelect.
 - [ ] add file associations (e.g. .url files, or .html files)
 
 # Changelog
+
+v1.4.0 [12/06/18]
+- Fixed Opera (post-blink) private mode (#35)
+- Chrome profiles are now listed as separate options (#29)
+(special thanks to [kueswol](https://github.com/kueswol) for his pull request)
 
 v1.3.9 [06/04/18]
 - Fixed Edge private mode (#34)

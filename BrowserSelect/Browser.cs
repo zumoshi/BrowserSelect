@@ -16,7 +16,7 @@ namespace BrowserSelect
         public string name;
         public string exec;
         public Icon icon;
-        public string additionalArgs="";
+        public string additionalArgs = "";
 
         public string private_arg
         {
@@ -31,18 +31,14 @@ namespace BrowserSelect
                     return "-private";
                 if (file.Contains("edge"))
                     return "-private";
+                if (file.Contains("launcher"))
+                    return "-private";
                 return "-private-window";  // FF
             }
         }
 
-        public List<char> shortcuts
-        {
-            get
-            {
-                // a one liner it is
-                return Regex.Replace(this.name, @"[^A-Za-z\s]", "").Split(new[] { ' ' }).Select(x => x.Substring(0, 1).ToLower()[0]).ToList();
-            }
-        }
+        public List<char> shortcuts => Regex.Replace(name, @"[^A-Za-z\s]", "").Split(' ')
+            .Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => x.Substring(0, 1).ToLower()[0]).ToList();
         public override string ToString()
         {
             return name;
@@ -100,7 +96,7 @@ namespace BrowserSelect
             {
                 string ChromeUserDataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Google\Chrome\User Data");
                 List<string> ChromeProfiles = FindChromeProfiles(ChromeUserDataDir);
-                            
+
                 if (ChromeProfiles.Count > 1)
                 {
                     //add the Chrome instances and remove the default one
@@ -132,9 +128,9 @@ namespace BrowserSelect
         {
             List<string> Profiles = new List<string>();
             var ProfileDirs = Directory.GetFiles(ChromeUserDataDir, "Google Profile.ico", SearchOption.AllDirectories).Select(Path.GetDirectoryName);
-            foreach(var Profile in ProfileDirs)
+            foreach (var Profile in ProfileDirs)
             {
-                Profiles.Add(Profile.Substring(ChromeUserDataDir.Length+1));
+                Profiles.Add(Profile.Substring(ChromeUserDataDir.Length + 1));
             }
             return Profiles;
         }
@@ -159,10 +155,10 @@ namespace BrowserSelect
 
                         //0. check if it can handle the http protocol
                         var capabilities = key.OpenSubKey("Capabilities");
-                            // IE does not have the capabilities subkey...
-                            // so assume that the app can handle http if it doesn't
-                            // advertise it's capablities
-                        if(capabilities != null)
+                        // IE does not have the capabilities subkey...
+                        // so assume that the app can handle http if it doesn't
+                        // advertise it's capablities
+                        if (capabilities != null)
                             if ((string)capabilities.OpenSubKey("URLAssociations").GetValue("http") == null)
                                 continue;
                         //1. check if path is not empty
