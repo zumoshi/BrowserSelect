@@ -12,25 +12,28 @@ namespace BrowserSelect
     public partial class Form1 : Form
     {
         // get the list of Borwsers from registry and remove the ones unchecked from settings
+        List<Browser> browsers;
 
-
-        List<Browser> browsers = BrowserFinder.find().Where(b => !Settings.Default.HideBrowsers.Contains(b.exec)).ToList();
-
+        private ButtonsUC buc;
 
         public Form1()
         {
-
-
             InitializeComponent();
         }
 
         public void updateBrowsers()
         {
-            List<Browser> browsers = BrowserFinder.find().Where(b => !Settings.Default.HideBrowsers.Contains(b.exec)).ToList();
+            SuspendLayout();
+            browsers = BrowserFinder.find().Where(b => !Settings.Default.HideBrowsers.Contains(b.Identifier)).ToList();
             int i = 0;
             int width = 0;
+            for (int k = Controls.Count - 1; k >= 0; k--)
+            {
+                Control c = Controls[k];
+                if (c is BrowserUC)
+                    Controls.RemoveAt(k);
+            }
             // add browserUC objects to the form
-            this.Controls.Clear();
             foreach (var browser in browsers)
             {
                 var buc = new BrowserUC(browser, i);
@@ -39,29 +42,23 @@ namespace BrowserSelect
                 buc.Click += browser_click;
                 this.Controls.Add(buc);
             }
-
-            this.AutoSize = true;
-            this.KeyPreview = true;
-            this.Controls.Add(new ButtonsUC(this) { Left = i * width + 20 });
+            ResumeLayout();
+            buc.Left = i * width;
+            btn_help.Left = i * width;
+            btn_help.Top = buc.Height - btn_help.Height;
+            // this.Width = i * 128 + 20 + 20;
         }
 
         private void Form1_Load(object sender, EventArgs e)
-        {
-            
-            this.updateBrowsers();
-            // resize the form
-            //this.Width = i * 128 + 20 + 20;
-            //this.AutoSize = true;
-            //this.KeyPreview = true;
+        {   
+            this.AutoSize = true;
+            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            this.KeyPreview = true;
             this.Text = Program.url;
             // set the form icon from .exe file icon
             this.Icon = IconExtractor.fromFile(Application.ExecutablePath);
-            // add vertical buttons to right of form
-            
-
             // create a wildcard rule for this domain (always button)
             _alwaysRule = generate_rule(Program.url);
-
             // check for new version
             if (Settings.Default.last_version != "nope")
             {
@@ -69,6 +66,10 @@ namespace BrowserSelect
                 btn_help.Click -= btn_help_Click;
                 btn_help.Click += btn_update_click;
             }
+            // add vertical buttons to right of form
+            buc = new ButtonsUC(this);
+            this.Controls.Add(buc);
+            this.updateBrowsers();
             center_me();
         }
 

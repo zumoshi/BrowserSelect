@@ -51,10 +51,9 @@
             // 
             // btn_setdefault
             // 
-            this.btn_setdefault.Location = new System.Drawing.Point(9, 134);
-            this.btn_setdefault.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btn_setdefault.Location = new System.Drawing.Point(6, 87);
             this.btn_setdefault.Name = "btn_setdefault";
-            this.btn_setdefault.Size = new System.Drawing.Size(202, 48);
+            this.btn_setdefault.Size = new System.Drawing.Size(135, 31);
             this.btn_setdefault.TabIndex = 0;
             this.btn_setdefault.Text = "Set as Default Browser";
             this.btn_setdefault.UseVisualStyleBackColor = true;
@@ -62,20 +61,18 @@
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(9, 25);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(6, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(202, 115);
+            this.label1.Size = new System.Drawing.Size(135, 75);
             this.label1.TabIndex = 1;
             this.label1.Text = "BrowserSelect must be set as default browser for it to function correctly. this b" +
     "utton will set it as the default browser.";
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(18, 486);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(12, 316);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(225, 86);
+            this.label2.Size = new System.Drawing.Size(150, 56);
             this.label2.TabIndex = 2;
             this.label2.Text = "if you have feature requests,bug reports or suggestions please submit an issue on" +
     " the project\'s Github.";
@@ -83,11 +80,9 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.browser_filter);
-            this.groupBox1.Location = new System.Drawing.Point(18, 18);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox1.Size = new System.Drawing.Size(225, 192);
+            this.groupBox1.Size = new System.Drawing.Size(150, 125);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Select Browsers";
@@ -96,10 +91,9 @@
             // 
             this.browser_filter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.browser_filter.FormattingEnabled = true;
-            this.browser_filter.Location = new System.Drawing.Point(4, 24);
-            this.browser_filter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.browser_filter.Location = new System.Drawing.Point(3, 16);
             this.browser_filter.Name = "browser_filter";
-            this.browser_filter.Size = new System.Drawing.Size(217, 163);
+            this.browser_filter.Size = new System.Drawing.Size(144, 106);
             this.browser_filter.TabIndex = 0;
             this.browser_filter.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.browser_filter_ItemCheck);
             // 
@@ -107,11 +101,9 @@
             // 
             this.groupBox2.Controls.Add(this.btn_setdefault);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Location = new System.Drawing.Point(22, 220);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox2.Location = new System.Drawing.Point(15, 143);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox2.Size = new System.Drawing.Size(220, 189);
+            this.groupBox2.Size = new System.Drawing.Size(147, 123);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Default Browser";
@@ -126,11 +118,9 @@
             this.groupBox3.Controls.Add(this.linkLabel1);
             this.groupBox3.Controls.Add(this.btn_apply);
             this.groupBox3.Controls.Add(this.gv_filters);
-            this.groupBox3.Location = new System.Drawing.Point(252, 18);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox3.Location = new System.Drawing.Point(168, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox3.Size = new System.Drawing.Size(666, 554);
+            this.groupBox3.Size = new System.Drawing.Size(444, 360);
             this.groupBox3.TabIndex = 4;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Auto Select Filters";
@@ -139,10 +129,9 @@
             // 
             this.btn_cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_cancel.Location = new System.Drawing.Point(423, 509);
-            this.btn_cancel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btn_cancel.Location = new System.Drawing.Point(282, 331);
             this.btn_cancel.Name = "btn_cancel";
-            this.btn_cancel.Size = new System.Drawing.Size(112, 35);
+            this.btn_cancel.Size = new System.Drawing.Size(75, 23);
             this.btn_cancel.TabIndex = 8;
             this.btn_cancel.Text = "Close";
             this.btn_cancel.UseVisualStyleBackColor = true;
@@ -151,10 +140,9 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(9, 509);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.button1.Location = new System.Drawing.Point(6, 331);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(112, 35);
+            this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 7;
             this.button1.Text = "Help";
             this.button1.UseVisualStyleBackColor = true;
@@ -164,10 +152,9 @@
             // 
             this.linkLabel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.linkLabel1.LinkArea = new System.Windows.Forms.LinkArea(212, 235);
-            this.linkLabel1.Location = new System.Drawing.Point(4, 24);
-            this.linkLabel1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.linkLabel1.Location = new System.Drawing.Point(3, 16);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(658, 62);
+            this.linkLabel1.Size = new System.Drawing.Size(438, 40);
             this.linkLabel1.TabIndex = 6;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = resources.GetString("linkLabel1.Text");
@@ -178,10 +165,9 @@
             // 
             this.btn_apply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_apply.Enabled = false;
-            this.btn_apply.Location = new System.Drawing.Point(544, 509);
-            this.btn_apply.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btn_apply.Location = new System.Drawing.Point(363, 331);
             this.btn_apply.Name = "btn_apply";
-            this.btn_apply.Size = new System.Drawing.Size(112, 35);
+            this.btn_apply.Size = new System.Drawing.Size(75, 23);
             this.btn_apply.TabIndex = 5;
             this.btn_apply.Text = "Apply";
             this.btn_apply.UseVisualStyleBackColor = true;
@@ -196,12 +182,12 @@
             this.gv_filters.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.pattern,
             this.browser});
-            this.gv_filters.Location = new System.Drawing.Point(9, 91);
-            this.gv_filters.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.gv_filters.Location = new System.Drawing.Point(6, 59);
             this.gv_filters.Name = "gv_filters";
-            this.gv_filters.Size = new System.Drawing.Size(648, 409);
+            this.gv_filters.Size = new System.Drawing.Size(432, 266);
             this.gv_filters.TabIndex = 1;
             this.gv_filters.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.gv_filters_CellBeginEdit);
+            this.gv_filters.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.gv_filters_DataError);
             this.gv_filters.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.gv_filters_CellBeginEdit);
             this.gv_filters.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.gv_filters_CellBeginEdit);
             // 
@@ -219,17 +205,15 @@
             this.browser.DataPropertyName = "Browser";
             this.browser.HeaderText = "Browser";
             this.browser.Name = "browser";
-            this.browser.Width = 73;
+            this.browser.Width = 51;
             // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.chk_check_update);
             this.groupBox4.Controls.Add(this.btn_check_update);
-            this.groupBox4.Location = new System.Drawing.Point(18, 418);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox4.Location = new System.Drawing.Point(12, 272);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox4.Size = new System.Drawing.Size(225, 63);
+            this.groupBox4.Size = new System.Drawing.Size(150, 41);
             this.groupBox4.TabIndex = 5;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Update checker";
@@ -237,10 +221,9 @@
             // chk_check_update
             // 
             this.chk_check_update.AutoSize = true;
-            this.chk_check_update.Location = new System.Drawing.Point(18, 25);
-            this.chk_check_update.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chk_check_update.Location = new System.Drawing.Point(12, 16);
             this.chk_check_update.Name = "chk_check_update";
-            this.chk_check_update.Size = new System.Drawing.Size(83, 24);
+            this.chk_check_update.Size = new System.Drawing.Size(58, 17);
             this.chk_check_update.TabIndex = 1;
             this.chk_check_update.Text = "enable";
             this.chk_check_update.UseVisualStyleBackColor = true;
@@ -248,10 +231,9 @@
             // 
             // btn_check_update
             // 
-            this.btn_check_update.Location = new System.Drawing.Point(104, 18);
-            this.btn_check_update.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btn_check_update.Location = new System.Drawing.Point(69, 12);
             this.btn_check_update.Name = "btn_check_update";
-            this.btn_check_update.Size = new System.Drawing.Size(112, 35);
+            this.btn_check_update.Size = new System.Drawing.Size(75, 23);
             this.btn_check_update.TabIndex = 0;
             this.btn_check_update.Text = "check now";
             this.btn_check_update.UseVisualStyleBackColor = true;
@@ -259,10 +241,9 @@
             // 
             // btn_refresh
             // 
-            this.btn_refresh.Location = new System.Drawing.Point(156, 11);
-            this.btn_refresh.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btn_refresh.Location = new System.Drawing.Point(104, 7);
             this.btn_refresh.Name = "btn_refresh";
-            this.btn_refresh.Size = new System.Drawing.Size(88, 29);
+            this.btn_refresh.Size = new System.Drawing.Size(59, 19);
             this.btn_refresh.TabIndex = 2;
             this.btn_refresh.Text = "Refresh";
             this.btn_refresh.UseVisualStyleBackColor = true;
@@ -270,10 +251,10 @@
             // 
             // frm_settings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btn_cancel;
-            this.ClientSize = new System.Drawing.Size(936, 586);
+            this.ClientSize = new System.Drawing.Size(624, 381);
             this.Controls.Add(this.btn_refresh);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -281,8 +262,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.MinimumSize = new System.Drawing.Size(529, 616);
+            this.MinimumSize = new System.Drawing.Size(358, 414);
             this.Name = "frm_settings";
             this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frm_settings_FormClosing);
