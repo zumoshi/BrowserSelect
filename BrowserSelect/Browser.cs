@@ -19,6 +19,8 @@ namespace BrowserSelect
         public string icon;
         public string additionalArgs = "";
 
+        public string Identifier => $"{exec} {additionalArgs}";
+
         public Image string2Icon()
         {
             byte[] byteArray = Convert.FromBase64String(this.icon);

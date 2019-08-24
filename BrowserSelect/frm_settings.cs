@@ -42,7 +42,7 @@ namespace BrowserSelect
 
             foreach (Browser b in browsers)
             {
-                browser_filter.Items.Add(b, !Settings.Default.HideBrowsers.Contains(b.exec));
+                browser_filter.Items.Add(b, !Settings.Default.HideBrowsers.Contains(b.Identifier));
                 c.Items.Add(b.ToString());
             }
             // add browser select to the list
@@ -83,11 +83,11 @@ namespace BrowserSelect
             //Save changes to the BrowserFilter List
             if (e.NewValue == CheckState.Checked)
             {
-                Settings.Default.HideBrowsers.Remove(((Browser)browser_filter.Items[e.Index]).exec);
+                Settings.Default.HideBrowsers.Remove(((Browser)browser_filter.Items[e.Index]).Identifier);
             }
             else
             {
-                Settings.Default.HideBrowsers.Add(((Browser)browser_filter.Items[e.Index]).exec);
+                Settings.Default.HideBrowsers.Add(((Browser)browser_filter.Items[e.Index]).Identifier);
             }
             Settings.Default.Save();
         }
@@ -220,15 +220,18 @@ namespace BrowserSelect
             browser_filter.Items.Clear();
             foreach (Browser b in browsers)
             {
-                browser_filter.Items.Add(b, !Settings.Default.HideBrowsers.Contains(b.exec));
+                browser_filter.Items.Add(b, !Settings.Default.HideBrowsers.Contains(b.Identifier));
                 c.Items.Add(b.ToString());
             }
             // add browser select to the list
             c.Items.Add("display BrowserSelect");
 
-            this.mainForm.SuspendLayout();
             this.mainForm.updateBrowsers();
-            this.mainForm.ResumeLayout();
+        }
+
+        private void gv_filters_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            // to prevent System.ArgumentException: DataGridViewComboBoxCell value is not valid MessageBoxes
         }
     }
     class AutoMatchRule
