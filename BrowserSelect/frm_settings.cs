@@ -12,8 +12,12 @@ namespace BrowserSelect
 {
     public partial class frm_settings : Form
     {
-        public frm_settings()
+
+        public Form1 mainForm;
+
+        public frm_settings(Form mainForm)
         {
+            this.mainForm = (Form1)mainForm;
             InitializeComponent();
         }
 
@@ -221,6 +225,8 @@ namespace BrowserSelect
             }
             // add browser select to the list
             c.Items.Add("display BrowserSelect");
+
+            this.mainForm.updateBrowsers();
         }
     }
     class AutoMatchRule

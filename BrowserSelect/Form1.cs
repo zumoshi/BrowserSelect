@@ -19,15 +19,18 @@ namespace BrowserSelect
 
         public Form1()
         {
-            
+
+
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        public void updateBrowsers()
         {
-            int width = 128;
-            // add browserUC objects to the form
+            List<Browser> browsers = BrowserFinder.find().Where(b => !Settings.Default.HideBrowsers.Contains(b.exec)).ToList();
             int i = 0;
+            int width = 0;
+            // add browserUC objects to the form
+            this.Controls.Clear();
             foreach (var browser in browsers)
             {
                 var buc = new BrowserUC(browser, i);
@@ -36,15 +39,25 @@ namespace BrowserSelect
                 buc.Click += browser_click;
                 this.Controls.Add(buc);
             }
-            // resize the form
-            //this.Width = i * 128 + 20 + 20;
+
             this.AutoSize = true;
             this.KeyPreview = true;
+            this.Controls.Add(new ButtonsUC(this) { Left = i * width + 20 });
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
+            this.updateBrowsers();
+            // resize the form
+            //this.Width = i * 128 + 20 + 20;
+            //this.AutoSize = true;
+            //this.KeyPreview = true;
             this.Text = Program.url;
             // set the form icon from .exe file icon
             this.Icon = IconExtractor.fromFile(Application.ExecutablePath);
             // add vertical buttons to right of form
-            this.Controls.Add(new ButtonsUC() { Left = i * width });
+            
 
             // create a wildcard rule for this domain (always button)
             _alwaysRule = generate_rule(Program.url);
