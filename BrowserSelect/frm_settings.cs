@@ -226,7 +226,9 @@ namespace BrowserSelect
             // add browser select to the list
             c.Items.Add("display BrowserSelect");
 
+            this.mainForm.SuspendLayout();
             this.mainForm.updateBrowsers();
+            this.mainForm.ResumeLayout();
         }
     }
     class AutoMatchRule
