@@ -17,5 +17,8 @@
     <Setting Name="last_version" Type="System.String" Scope="User">
       <Value Profile="(Default)">nope</Value>
     </Setting>
+    <Setting Name="BrowserList" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

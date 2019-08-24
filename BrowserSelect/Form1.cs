@@ -12,9 +12,14 @@ namespace BrowserSelect
     public partial class Form1 : Form
     {
         // get the list of Borwsers from registry and remove the ones unchecked from settings
+
+
         List<Browser> browsers = BrowserFinder.find().Where(b => !Settings.Default.HideBrowsers.Contains(b.exec)).ToList();
+
+
         public Form1()
         {
+            
             InitializeComponent();
         }
 
