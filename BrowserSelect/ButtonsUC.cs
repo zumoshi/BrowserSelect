@@ -11,8 +11,11 @@ namespace BrowserSelect
 {
     public partial class ButtonsUC : UserControl
     {
-        public ButtonsUC()
+
+        public Form callingForm;
+        public ButtonsUC(Form callingForm)
         {
+            this.callingForm = callingForm;
             InitializeComponent();
             add_button("About", show_about, 0);
             add_button("Settings", show_setting, 1);
@@ -24,7 +27,7 @@ namespace BrowserSelect
 
         private void show_setting(object sender, EventArgs e)
         {
-            new frm_settings().ShowDialog();
+            new frm_settings(this.callingForm).ShowDialog();
         }
 
         private void show_about(object sender, EventArgs e)
