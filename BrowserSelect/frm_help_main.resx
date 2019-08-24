@@ -133,6 +133,7 @@ in the main page you can see the Url being opened as Title of the window, here y
     this will create a rule for all subdomains of current URL, to undo this open BrowserSelect via start menu,
     go to settings, highlight the rule for that domain, press Delete key on keyboard then press apply
 
+The first time you run BrowserSelect it caches your list of installed browsers and profiles. To update the browsers and profiles, go to Settings and hit the "Refresh" button next to the list of browsers.
 
 if you don't regularly use many browsers but instead open all URLs in one browser but one specific website in another (e.g. firefox for normal use but IE for company website) you can go to settings and add a rule for "*" to open with preferred browser then add separate rules for websites to open in other browsers. refer to "Help" section in settings for more details.</value>
   </data>
