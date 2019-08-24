@@ -41,7 +41,7 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.chk_check_update = new System.Windows.Forms.CheckBox();
             this.btn_check_update = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btn_refresh = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -257,16 +257,16 @@
             this.btn_check_update.UseVisualStyleBackColor = true;
             this.btn_check_update.Click += new System.EventHandler(this.btn_check_update_Click);
             // 
-            // button2
+            // btn_refresh
             // 
-            this.button2.Location = new System.Drawing.Point(156, 11);
-            this.button2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(88, 29);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Refresh";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.btn_refresh.Location = new System.Drawing.Point(156, 11);
+            this.btn_refresh.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btn_refresh.Name = "btn_refresh";
+            this.btn_refresh.Size = new System.Drawing.Size(88, 29);
+            this.btn_refresh.TabIndex = 2;
+            this.btn_refresh.Text = "Refresh";
+            this.btn_refresh.UseVisualStyleBackColor = true;
+            this.btn_refresh.Click += new System.EventHandler(this.btn_refresh_Click);
             // 
             // frm_settings
             // 
@@ -274,7 +274,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btn_cancel;
             this.ClientSize = new System.Drawing.Size(936, 586);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.btn_refresh);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -317,6 +317,6 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckBox chk_check_update;
         private System.Windows.Forms.Button btn_check_update;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btn_refresh;
     }
 }
