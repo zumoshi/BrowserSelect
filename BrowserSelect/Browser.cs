@@ -26,7 +26,6 @@ namespace BrowserSelect
             using (MemoryStream stream = new MemoryStream(byteArray))
             {
                 newIcon = new Bitmap(stream);
-            
             }
           
             return newIcon; 
@@ -67,9 +66,6 @@ namespace BrowserSelect
 
         public static string icon2String(Icon myIcon)
         {
-
-
-           // var icon = Icon.ExtractAssociatedIcon(_path);
             byte[] bytes;
             using (var ms = new MemoryStream())
             {
@@ -79,19 +75,12 @@ namespace BrowserSelect
 
             string iconString = Convert.ToBase64String(bytes);
 
-            /*
-            string iconString;
-            using (MemoryStream stream = new MemoryStream())
-            {
-                myIcon.Save(stream);
-                iconString = Convert.ToBase64String(stream.GetBuffer());
-            } */
             return iconString;
         }
 
         public static List<Browser> find(bool update = false)
         {
-          //  Properties.Settings.Default.BrowserList = "";
+          
             List<Browser> browsers = new List<Browser>();
             if (Properties.Settings.Default.BrowserList != "" && !update)
             {
@@ -99,9 +88,6 @@ namespace BrowserSelect
             }
             else
             {
-
-
-
                 //special case , firefox+firefox developer both installed
                 //(only works if firefox installed in default directory)
                 var ff_path = Path.Combine(
@@ -164,16 +150,12 @@ namespace BrowserSelect
                     }
                 }
 
-              
-
                 System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(browsers));
                 Properties.Settings.Default.BrowserList = JsonConvert.SerializeObject(browsers);
-               
                 Properties.Settings.Default.Save();
             }
-            System.Diagnostics.Debug.WriteLine(Properties.Settings.Default.BrowserList);
 
-                return browsers;
+            return browsers;
         }
 
         private static string GetChromeProfileName(string FullProfilePath)

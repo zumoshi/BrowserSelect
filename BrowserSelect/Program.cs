@@ -21,7 +21,6 @@ namespace BrowserSelect
         static void Main(string[] args)
         {
 
-            System.Diagnostics.Debug.WriteLine("Test");
             // fix #28
             LeaveDotsAndSlashesEscaped();
             // to prevent loss of settings when on update

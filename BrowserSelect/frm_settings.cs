@@ -208,7 +208,7 @@ namespace BrowserSelect
             Settings.Default.Save();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btn_refresh_Click(object sender, EventArgs e)
         {
             List<Browser> browsers = BrowserFinder.find(true);
             var c = ((DataGridViewComboBoxColumn)gv_filters.Columns["browser"]);
