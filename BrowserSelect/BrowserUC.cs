@@ -18,7 +18,7 @@ namespace BrowserSelect {
             name.Text = b.name;
             shortcuts.Text = "( " + Convert.ToString(index+1) + "," + String.Join(",", b.shortcuts) + " )";
             shortcuts.ForeColor = Color.FromKnownColor(KnownColor.GrayText);
-            icon.Image = b.icon.ToBitmap();
+            icon.Image = b.string2Icon();//.ToBitmap();
             icon.SizeMode = PictureBoxSizeMode.Zoom;
         }
         public new event EventHandler Click {

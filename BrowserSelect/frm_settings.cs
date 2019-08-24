@@ -207,6 +207,21 @@ namespace BrowserSelect
             Settings.Default.check_update = (((CheckBox)sender).Checked) ? "0" : "nope";
             Settings.Default.Save();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            List<Browser> browsers = BrowserFinder.find(true);
+            var c = ((DataGridViewComboBoxColumn)gv_filters.Columns["browser"]);
+            c.Items.Clear();
+            browser_filter.Items.Clear();
+            foreach (Browser b in browsers)
+            {
+                browser_filter.Items.Add(b, !Settings.Default.HideBrowsers.Contains(b.exec));
+                c.Items.Add(b.ToString());
+            }
+            // add browser select to the list
+            c.Items.Add("display BrowserSelect");
+        }
     }
     class AutoMatchRule
     {
