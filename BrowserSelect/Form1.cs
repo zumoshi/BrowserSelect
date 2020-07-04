@@ -78,6 +78,7 @@ namespace BrowserSelect
         {
             public string tld_rule;
             public string second_rule;
+            public string url_rule;
             public int mode;
         }
 
@@ -104,9 +105,14 @@ namespace BrowserSelect
             }
             else
             {
-                // in case pattern was not ambiguous, just set the pattern as rule and open the url
-                var pat = (_alwaysRule.mode == 1) ? _alwaysRule.tld_rule : _alwaysRule.second_rule;
-                add_rule(b, pat);
+
+                _alwaysAsk = new ContextMenu((new[] { _alwaysRule.tld_rule, _alwaysRule.second_rule, _alwaysRule.url_rule })
+                    .Select(x => new MenuItem(x, (s, e) => add_rule(b, x))).ToArray());
+                // display the context menu at mouse position
+                _alwaysAsk.Show(this, PointToClient(Cursor.Position));
+             //   // in case pattern was not ambiguous, just set the pattern as rule and open the url
+             //   var pat = (_alwaysRule.mode == 1) ? _alwaysRule.tld_rule : _alwaysRule.second_rule;
+             //   add_rule(b, pat);
             }
         }
 
@@ -194,6 +200,7 @@ namespace BrowserSelect
             {
                 tld_rule = rule_tld,
                 second_rule = rule_second,
+                url_rule = url,
                 mode = mode
             };
         }

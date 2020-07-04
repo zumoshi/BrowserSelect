@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 using BrowserSelect.Properties;
 
 namespace BrowserSelect
@@ -62,7 +63,7 @@ namespace BrowserSelect
                     var browser = sr[1];
 
                     // matching the domain to pattern
-                    if (DoesDomainMatchPattern(uri.Host, pattern))
+                    if (DoesAutoRuleMatch(uri, pattern))
                     {
                         // ignore the display browser select entry to prevent app running itself
                         if (browser != "display BrowserSelect")
@@ -146,7 +147,43 @@ namespace BrowserSelect
             return Environment.GetEnvironmentVariable("ProgramFiles");
         }
 
+        public static bool DoesAutoRuleMatch(Uri uri, string pattern)
+        {
+            try {
+                // test for whether url user is visiting matches the pa
+                if (uri.Equals(pattern))
+                {
+                    return true;
+                }
+            } catch (UriFormatException e) 
+            { 
+                // will probably get this with wildcard strings, ignore
+            }
+            // for the regex, replace every '*' with '.*' so the regex can understand it
+            // of course this means that urls with * in them won't match very well, but 
+            // assume that's not very common kind of url
 
+            // tidy up the pattern for regex
+            string newpattern = Regex.Escape(pattern);
+            // unfortunately, this means that the wildcard * that we wanted in the pattern
+            // has now been escaped to \*, so let's reverse that 
+            newpattern = newpattern.Replace(@"\*", ".*");
+
+            Regex rx = new Regex(newpattern, RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
+
+            if (rx.IsMatch(uri.Host))
+            {
+                // first check if the pattern matches the domain, if so that 'wins'
+                return true;
+            } else
+            {
+                // pattern could be any of:
+                // url with wildcard e.g. www.google.com/map*, *.google.com/maps, http://*.google.com
+                // Assume ? is not a wildcard, only a query string parameter 
+                // (i.e. part of the url) e.g. www.google.com/maps?hello
+                return (rx.IsMatch(uri.Host + uri.PathAndQuery + uri.Fragment));
+            }
+        }
         /// <summary>
         /// Checks if a wildcard string matches a domain
         /// taken from http://madskristensen.net/post/wildcard-search-for-domains-in-c
