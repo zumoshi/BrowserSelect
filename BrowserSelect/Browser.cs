@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using IniParser;
+using IniParser.Model;
 
 namespace BrowserSelect
 {
@@ -134,6 +136,9 @@ namespace BrowserSelect
                 //Check for Chrome Profiles
                 AddChromeProfiles(browsers, "Google Chrome", @"Google\Chrome\User Data", "Google Profile.ico");
 
+                //Check for Firefox profiles
+                AddFirefoxProfiles(browsers, "Mozilla Firefox");
+
                 System.Diagnostics.Debug.WriteLine(JsonConvert.SerializeObject(browsers));
                 Properties.Settings.Default.BrowserList = JsonConvert.SerializeObject(browsers);
                 Properties.Settings.Default.Save();
@@ -183,6 +188,40 @@ namespace BrowserSelect
                 Profiles.Add(Profile.Substring(ChromeUserDataDir.Length + 1));
             }
             return Profiles;
+        }
+
+        private static void AddFirefoxProfiles(List<Browser> browsers, string BrowserName)
+        {
+            Browser BrowserFirefox = browsers.FirstOrDefault(x => x.name == BrowserName);
+            if (BrowserFirefox == null)
+                return;
+            string Exec = BrowserFirefox.exec;
+            var FirefoxProfilesIni = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Mozilla\Firefox\profiles.ini");
+            var parser = new FileIniDataParser();
+            IniData data = parser.ReadFile(FirefoxProfilesIni);
+            string defaultProfile = null;
+            foreach (var section in data.Sections)
+            {
+                if (section.SectionName.StartsWith("Install"))
+                {
+                    defaultProfile = section.Keys["Default"];
+                }
+            }
+            foreach (var section in data.Sections)
+            {
+                if (section.SectionName.StartsWith("Profile"))
+                {
+                    if (section.Keys["Path"] == defaultProfile)
+                        continue;
+                    browsers.Add(new Browser()
+                    {
+                        name = BrowserName + " (" + section.Keys["Name"] + ")",
+                        exec = Exec,
+                        icon = icon2String(IconExtractor.fromFile(Exec)),
+                        additionalArgs = String.Format("-p \"{0}\"", section.Keys["Name"])
+                    });
+                }
+            }
         }
 
         private static List<Browser> find(RegistryKey hklm)
