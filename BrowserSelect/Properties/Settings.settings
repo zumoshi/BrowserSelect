@@ -2,22 +2,19 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="BrowserSelect.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="HideBrowsers" Type="System.Collections.Specialized.StringCollection" Scope="User">
+    <Setting Name="HiddenBrowsers" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="AutoBrowser" Type="System.Collections.Specialized.StringCollection" Scope="User">
+    <Setting Name="Rules" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="UpdateSettings" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+    <Setting Name="CachedBrowserList" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="check_update" Type="System.String" Scope="User">
-      <Value Profile="(Default)">nope</Value>
+    <Setting Name="Version" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="last_version" Type="System.String" Scope="User">
-      <Value Profile="(Default)">nope</Value>
-    </Setting>
-    <Setting Name="BrowserList" Type="System.String" Scope="User">
+    <Setting Name="DefaultBrowser" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

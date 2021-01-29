@@ -12,7 +12,7 @@ namespace BrowserSelect.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,71 +25,59 @@ namespace BrowserSelect.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Specialized.StringCollection HideBrowsers {
+        public global::System.Collections.Specialized.StringCollection HiddenBrowsers {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["HideBrowsers"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["HiddenBrowsers"]));
             }
             set {
-                this["HideBrowsers"] = value;
+                this["HiddenBrowsers"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Specialized.StringCollection AutoBrowser {
+        public global::System.Collections.Specialized.StringCollection Rules {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["AutoBrowser"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["Rules"]));
             }
             set {
-                this["AutoBrowser"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool UpdateSettings {
-            get {
-                return ((bool)(this["UpdateSettings"]));
-            }
-            set {
-                this["UpdateSettings"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("nope")]
-        public string check_update {
-            get {
-                return ((string)(this["check_update"]));
-            }
-            set {
-                this["check_update"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("nope")]
-        public string last_version {
-            get {
-                return ((string)(this["last_version"]));
-            }
-            set {
-                this["last_version"] = value;
+                this["Rules"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string BrowserList {
+        public string CachedBrowserList {
             get {
-                return ((string)(this["BrowserList"]));
+                return ((string)(this["CachedBrowserList"]));
             }
             set {
-                this["BrowserList"] = value;
+                this["CachedBrowserList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Version {
+            get {
+                return ((int)(this["Version"]));
+            }
+            set {
+                this["Version"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultBrowser {
+            get {
+                return ((string)(this["DefaultBrowser"]));
+            }
+            set {
+                this["DefaultBrowser"] = value;
             }
         }
     }

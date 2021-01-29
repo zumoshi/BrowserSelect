@@ -1,6 +1,6 @@
 ﻿namespace BrowserSelect
 {
-    partial class ButtonsUC
+    partial class SettingsButtonControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -30,11 +30,11 @@
         {
             this.SuspendLayout();
             // 
-            // ButtonsUC
+            // SetttingsButtonControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Name = "ButtonsUC";
+            this.Name = "SettingsButtonControl";
             this.Size = new System.Drawing.Size(25, 180);
             this.ResumeLayout(false);
 
