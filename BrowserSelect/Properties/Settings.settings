@@ -20,5 +20,8 @@
     <Setting Name="BrowserList" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="expand_url" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Never</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
