@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrowserSelect.Properties;
+using System.Web;
 
 namespace BrowserSelect
 {
@@ -50,6 +51,7 @@ namespace BrowserSelect
                 url = args[0];
                 //add http:// to url if it is missing a protocol
                 var uri = new UriBuilder(url).Uri;
+                uri = UriExpander(uri);
                 url = uri.AbsoluteUri;
 
                 foreach (var sr in Settings.Default.AutoBrowser.Cast<string>()
@@ -206,6 +208,21 @@ namespace BrowserSelect
             }
 
             setUpdatableFlagsMethod.Invoke(uriParser, new object[] { 0 });
+        }
+
+        private static Uri UriExpander(Uri uri)
+        {
+            // always expand microsoft safelinks
+            if (uri.Host.EndsWith("safelinks.protection.outlook.com"))
+            {
+                var queryDict = HttpUtility.ParseQueryString(uri.Query);
+                if (queryDict != null && queryDict.Get("url") != null)
+                {
+                    uri = new UriBuilder(HttpUtility.UrlDecode(queryDict.Get("url"))).Uri;
+                }
+            }
+
+            return uri;
         }
     }
 }
