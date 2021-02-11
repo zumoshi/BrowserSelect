@@ -16,7 +16,7 @@ namespace BrowserSelect
 {
     static class Program
     {
-        public static string url = "http://google.com/";
+        public static string url = "";
 
         /// <summary>
         /// The main entry point for the application.
@@ -88,7 +88,10 @@ namespace BrowserSelect
             // display main form
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            if (url != "")
+                Application.Run(new Form1());
+            else
+                Application.Run(new frm_settings());
         }
 
         // from : http://stackoverflow.com/a/250400/1461004

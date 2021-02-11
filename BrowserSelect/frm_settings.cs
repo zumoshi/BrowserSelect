@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,6 +15,11 @@ namespace BrowserSelect
     {
 
         public Form1 mainForm;
+
+        public frm_settings()
+        {
+            InitializeComponent();
+        }
 
         public frm_settings(Form mainForm)
         {
@@ -230,7 +236,10 @@ namespace BrowserSelect
             // add browser select to the list
             c.Items.Add("display BrowserSelect");
 
-            this.mainForm.updateBrowsers();
+            if (mainForm != null)
+                this.mainForm.updateBrowsers();
+            else
+                browsers = BrowserFinder.find().Where(b => !Settings.Default.HideBrowsers.Contains(b.Identifier)).ToList();
         }
 
         private void gv_filters_DataError(object sender, DataGridViewDataErrorEventArgs e)
