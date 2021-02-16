@@ -30,6 +30,8 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.browser_filter = new System.Windows.Forms.CheckedListBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cmbo_expand_url = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btn_cancel = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -51,10 +53,10 @@
             // 
             // btn_setdefault
             // 
-            this.btn_setdefault.Location = new System.Drawing.Point(6, 87);
+            this.btn_setdefault.Location = new System.Drawing.Point(6, 47);
             this.btn_setdefault.Name = "btn_setdefault";
             this.btn_setdefault.Size = new System.Drawing.Size(135, 31);
-            this.btn_setdefault.TabIndex = 0;
+            this.btn_setdefault.TabIndex = 2;
             this.btn_setdefault.Text = "Set as Default Browser";
             this.btn_setdefault.UseVisualStyleBackColor = true;
             this.btn_setdefault.Click += new System.EventHandler(this.btn_setdefault_Click);
@@ -63,10 +65,9 @@
             // 
             this.label1.Location = new System.Drawing.Point(6, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(135, 75);
+            this.label1.Size = new System.Drawing.Size(135, 28);
             this.label1.TabIndex = 1;
-            this.label1.Text = "BrowserSelect must be set as default browser for it to function correctly. this b" +
-    "utton will set it as the default browser.";
+            this.label1.Text = "BrowserSelect must be the default browser.";
             // 
             // label2
             // 
@@ -83,7 +84,7 @@
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(150, 125);
-            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Select Browsers";
             // 
@@ -94,19 +95,40 @@
             this.browser_filter.Location = new System.Drawing.Point(3, 16);
             this.browser_filter.Name = "browser_filter";
             this.browser_filter.Size = new System.Drawing.Size(144, 106);
-            this.browser_filter.TabIndex = 0;
+            this.browser_filter.TabIndex = 1;
             this.browser_filter.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.browser_filter_ItemCheck);
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.cmbo_expand_url);
+            this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.btn_setdefault);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Location = new System.Drawing.Point(15, 143);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(147, 123);
-            this.groupBox2.TabIndex = 0;
+            this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Default Browser";
+            this.groupBox2.Text = "Options";
+            // 
+            // cmbo_expand_url
+            // 
+            this.cmbo_expand_url.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbo_expand_url.FormattingEnabled = true;
+            this.cmbo_expand_url.Location = new System.Drawing.Point(9, 96);
+            this.cmbo_expand_url.Name = "cmbo_expand_url";
+            this.cmbo_expand_url.Size = new System.Drawing.Size(132, 21);
+            this.cmbo_expand_url.TabIndex = 3;
+            this.cmbo_expand_url.SelectionChangeCommitted += new System.EventHandler(this.cmbo_expand_url_SelectionChangeCommitted);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 81);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(64, 13);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Expand Urls";
             // 
             // groupBox3
             // 
@@ -121,7 +143,7 @@
             this.groupBox3.Location = new System.Drawing.Point(168, 12);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(444, 360);
-            this.groupBox3.TabIndex = 4;
+            this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Auto Select Filters";
             // 
@@ -168,7 +190,7 @@
             this.btn_apply.Location = new System.Drawing.Point(363, 331);
             this.btn_apply.Name = "btn_apply";
             this.btn_apply.Size = new System.Drawing.Size(75, 23);
-            this.btn_apply.TabIndex = 5;
+            this.btn_apply.TabIndex = 9;
             this.btn_apply.Text = "Apply";
             this.btn_apply.UseVisualStyleBackColor = true;
             this.btn_apply.Click += new System.EventHandler(this.btn_apply_Click);
@@ -185,7 +207,7 @@
             this.gv_filters.Location = new System.Drawing.Point(6, 59);
             this.gv_filters.Name = "gv_filters";
             this.gv_filters.Size = new System.Drawing.Size(432, 266);
-            this.gv_filters.TabIndex = 1;
+            this.gv_filters.TabIndex = 6;
             this.gv_filters.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.gv_filters_CellBeginEdit);
             this.gv_filters.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.gv_filters_DataError);
             this.gv_filters.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.gv_filters_CellBeginEdit);
@@ -195,7 +217,7 @@
             // 
             this.pattern.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.pattern.DataPropertyName = "Pattern";
-            this.pattern.HeaderText = "Pattern";
+            this.pattern.HeaderText = "Domain Pattern";
             this.pattern.Name = "pattern";
             this.pattern.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
@@ -214,7 +236,7 @@
             this.groupBox4.Location = new System.Drawing.Point(12, 272);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(150, 41);
-            this.groupBox4.TabIndex = 5;
+            this.groupBox4.TabIndex = 2;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Update checker";
             // 
@@ -224,7 +246,7 @@
             this.chk_check_update.Location = new System.Drawing.Point(12, 16);
             this.chk_check_update.Name = "chk_check_update";
             this.chk_check_update.Size = new System.Drawing.Size(58, 17);
-            this.chk_check_update.TabIndex = 1;
+            this.chk_check_update.TabIndex = 4;
             this.chk_check_update.Text = "enable";
             this.chk_check_update.UseVisualStyleBackColor = true;
             this.chk_check_update.CheckedChanged += new System.EventHandler(this.chk_check_update_CheckedChanged);
@@ -234,7 +256,7 @@
             this.btn_check_update.Location = new System.Drawing.Point(69, 12);
             this.btn_check_update.Name = "btn_check_update";
             this.btn_check_update.Size = new System.Drawing.Size(75, 23);
-            this.btn_check_update.TabIndex = 0;
+            this.btn_check_update.TabIndex = 5;
             this.btn_check_update.Text = "check now";
             this.btn_check_update.UseVisualStyleBackColor = true;
             this.btn_check_update.Click += new System.EventHandler(this.btn_check_update_Click);
@@ -244,7 +266,7 @@
             this.btn_refresh.Location = new System.Drawing.Point(104, 7);
             this.btn_refresh.Name = "btn_refresh";
             this.btn_refresh.Size = new System.Drawing.Size(59, 19);
-            this.btn_refresh.TabIndex = 2;
+            this.btn_refresh.TabIndex = 0;
             this.btn_refresh.Text = "Refresh";
             this.btn_refresh.UseVisualStyleBackColor = true;
             this.btn_refresh.Click += new System.EventHandler(this.btn_refresh_Click);
@@ -270,6 +292,7 @@
             this.Load += new System.EventHandler(this.frm_settings_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gv_filters)).EndInit();
             this.groupBox4.ResumeLayout(false);
@@ -298,5 +321,7 @@
         private System.Windows.Forms.CheckBox chk_check_update;
         private System.Windows.Forms.Button btn_check_update;
         private System.Windows.Forms.Button btn_refresh;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cmbo_expand_url;
     }
 }
