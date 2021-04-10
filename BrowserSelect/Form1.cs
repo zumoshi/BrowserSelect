@@ -19,6 +19,7 @@ namespace BrowserSelect
         public Form1()
         {
             InitializeComponent();
+            MaximizeBox = false;
         }
 
         public void updateBrowsers()
@@ -289,12 +290,15 @@ namespace BrowserSelect
             var top = wa.Height / 2 + wa.Top - Height / 2;
 
             this.Location = new Point(left, top);
-            this.Activate();
-            // Bring BrowserSelect up front if link is clicked inside UWP apps, notably Windows Terminal
-            this.WindowState = FormWindowState.Normal;
-            this.BringToFront();
+
+            
+            // Borrowed from https://stackoverflow.com/a/5853542
+            // Get the window to the front
             this.TopMost = true;
-            this.Focus();
+            this.TopMost = false;
+
+            // "Steal" the focus
+            this.Activate();            
         }
 
         private void btn_help_Click(object sender, EventArgs e)
