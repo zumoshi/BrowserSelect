@@ -255,7 +255,12 @@ namespace BrowserSelect
             }
             else
             {
-                Process.Start(b.exec, Program.Args2Str(args));
+                ProcessStartInfo startInfo = new ProcessStartInfo(b.exec);
+                // Clicking MS Edge takes more than 4 seconds to load, even with an existing window
+                // Disabling UseShellExecute to create the process directly from the browser executable file
+                startInfo.UseShellExecute = false;
+                startInfo.Arguments = Program.Args2Str(args);
+                Process.Start(startInfo);
             }
             Application.Exit();
         }
@@ -287,6 +292,11 @@ namespace BrowserSelect
 
             this.Location = new Point(left, top);
             this.Activate();
+            // Bring BrowserSelect up front if link is clicked inside UWP apps, notably Windows Terminal
+            this.WindowState = FormWindowState.Normal;
+            this.BringToFront();
+            this.TopMost = true;
+            this.Focus();
         }
 
         private void btn_help_Click(object sender, EventArgs e)
