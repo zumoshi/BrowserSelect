@@ -229,8 +229,9 @@ namespace BrowserSelect
                 "safelinks.protection.outlook.com"
             };
 
+            Console.WriteLine("URLExpander: " + uri.Host);
             if (Settings.Default.expand_url != "None" &&
-                enabled_url_expanders.Contains(uri.Host))
+                Array.Exists(enabled_url_expanders, ele => uri.Host.EndsWith(ele)))
             {
                 if (uri.Host.EndsWith("safelinks.protection.outlook.com"))
                 {
@@ -260,6 +261,7 @@ namespace BrowserSelect
             {
                 return uri;
             }
+            Console.WriteLine("Url " + num_redirects + " " + uri.Host);
 
             //TODO - This should be a user configurable list
             string[] url_shortners = {
@@ -287,7 +289,6 @@ namespace BrowserSelect
             if (!Program.uriExpanderThreadStop &&
                 url_shortners.Contains(uri.Host))
             {
-                //Console.WriteLine("num_redirects: " + num_redirects);
                 //Thread.Sleep(2000);
                 if (num_redirects == 0)
                 {
@@ -306,7 +307,6 @@ namespace BrowserSelect
                     {
                         uri = response.ResponseUri;
                     }
-                    Console.WriteLine("Url " + num_redirects + " " + uri.Host);
                 }
             }
 
@@ -344,12 +344,14 @@ namespace BrowserSelect
                 Program.webRequestThread = webRequest;
                 ThreadPool.RegisterWaitForSingleObject(ar.AsyncWaitHandle, new WaitOrTimerCallback(TimeoutCallback), webRequest, webRequest.Timeout, true);
                 response = (HttpWebResponse)webRequest.EndGetResponse(ar);
+                response.Close();
             }
-            catch (Exception ex)
+            catch (WebException ex)
             {
                 // We are mostly catch up webRequest.Abort() or webRequest errors here (e.g. untrusted certificates)
                 // No action required.
-                Console.WriteLine(ex);
+                if (ex.Status != WebExceptionStatus.RequestCanceled)
+                    Console.WriteLine(ex);
             }
 
             return response;
