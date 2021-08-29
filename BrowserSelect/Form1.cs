@@ -161,7 +161,9 @@ namespace BrowserSelect
                 x = parts[count - 2]; //second-level
                 y = parts[count - 3]; //third-level
             }
-            catch (IndexOutOfRangeException) { } // in case domain did not have 3 parts.. (e.g. localhost, google.com)
+            catch (IndexOutOfRangeException ex) {
+                Debug.WriteLine(ex);
+            } // in case domain did not have 3 parts.. (e.g. localhost, google.com)
 
             // creating the patterns
             var rule_tld = String.Format("*.{0}.{1}", x, tld);

@@ -25,7 +25,6 @@ namespace BrowserSelect
         [STAThread]
         static void Main(string[] args)
         {
-
             // fix #28
             LeaveDotsAndSlashesEscaped();
             // to prevent loss of settings when on update
@@ -229,7 +228,7 @@ namespace BrowserSelect
                 "safelinks.protection.outlook.com"
             };
 
-            Console.WriteLine("URLExpander: " + uri.Host);
+            System.Diagnostics.Debug.WriteLine("URLExpander: " + uri.Host);
             if (Settings.Default.expand_url != "None" &&
                 Array.Exists(enabled_url_expanders, ele => uri.Host.EndsWith(ele)))
             {
@@ -261,7 +260,7 @@ namespace BrowserSelect
             {
                 return uri;
             }
-            Console.WriteLine("Url " + num_redirects + " " + uri.Host);
+            System.Diagnostics.Debug.WriteLine("Url " + num_redirects + " " + uri.Host);
 
             //TODO - This should be a user configurable list
             string[] url_shortners = {
@@ -318,9 +317,9 @@ namespace BrowserSelect
                         Program.uriExpanderThreadStop = true;
                         SplashScreen.Invoke(new Action(() => SplashScreen.Close()));
                     }
-                    catch
+                    catch (Exception ex)
                     {
-
+                        System.Diagnostics.Debug.WriteLine(ex);
                     }
             }
             return uri;
@@ -350,8 +349,7 @@ namespace BrowserSelect
             {
                 // We are mostly catch up webRequest.Abort() or webRequest errors here (e.g. untrusted certificates)
                 // No action required.
-                if (ex.Status != WebExceptionStatus.RequestCanceled)
-                    Console.WriteLine(ex);
+                System.Diagnostics.Debug.WriteLine(ex);
             }
 
             return response;
@@ -365,7 +363,7 @@ namespace BrowserSelect
                 HttpWebRequest request = state as HttpWebRequest;
                 if (request != null)
                 {
-                    Console.WriteLine("Timed out, aborting HTTP request...");
+                    System.Diagnostics.Debug.WriteLine("Timed out, aborting HTTP request...");
                     request.Abort();
                 }
             }

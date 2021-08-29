@@ -212,7 +212,9 @@ namespace BrowserSelect
                     btn.UseVisualStyleBackColor = true;
                     btn.Enabled = true;
                 }
-                catch (Exception) { }
+                catch (Exception ex) {
+                    Debug.WriteLine(ex);
+                }
                 return x;
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
@@ -289,8 +291,9 @@ namespace BrowserSelect
             {
                 return Browser.Length > 0 && Pattern.Length > 0;
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex);
                 return false;
             }
 

@@ -53,7 +53,9 @@ namespace BrowserSelect
                 current_version = ((Func<String, String>)((x) => x.Substring(0, x.Length - 2)))(Application.ProductVersion);
                 init = true;
             }
-            catch (Exception) { }
+            catch (Exception ex) {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
         }
 
         bool new_version()

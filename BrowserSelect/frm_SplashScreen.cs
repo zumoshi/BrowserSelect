@@ -20,7 +20,7 @@ namespace BrowserSelect
         {
             if (!Program.uriExpanderThreadStop)
             {
-                System.Console.WriteLine("FormCosing, Abort HTTPWebrequest...");
+                System.Diagnostics.Debug.WriteLine("FormCosing, Abort HTTPWebrequest...");
                 Program.uriExpanderThreadStop = true;
                 Program.webRequestThread.Abort();
             }
