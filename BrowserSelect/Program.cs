@@ -9,14 +9,15 @@ using System.Windows.Forms;
 using BrowserSelect.Properties;
 using System.Web;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using System.Net.Security;
+using System.Threading;
 
 namespace BrowserSelect
 {
     static class Program
     {
         public static string url = "";
+        public static HttpWebRequest webRequestThread = null;
+        public static bool uriExpanderThreadStop = false;
 
         /// <summary>
         /// The main entry point for the application.
@@ -47,6 +48,10 @@ namespace BrowserSelect
                 var uc = new UpdateChecker();
                 Task.Factory.StartNew(() => uc.check());
             }
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
             //checking if a url is being opened or app is ran from start menu (without arguments)
             if (args.Length > 0)
             {
@@ -55,6 +60,7 @@ namespace BrowserSelect
                 //add http:// to url if it is missing a protocol
                 var uri = new UriBuilder(url).Uri;
                 uri = UriExpander(uri);
+                uri = UriFollowRedirects(uri);
                 url = uri.AbsoluteUri;
 
                 foreach (var sr in Settings.Default.AutoBrowser.Cast<string>()
@@ -86,8 +92,8 @@ namespace BrowserSelect
             }
 
             // display main form
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            //Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
             if (url != "")
                 Application.Run(new Form1());
             else
@@ -218,54 +224,149 @@ namespace BrowserSelect
 
         private static Uri UriExpander(Uri uri)
         {
-            // always expand microsoft safelinks
-            if (uri.Host.EndsWith("safelinks.protection.outlook.com"))
-            {
-                var queryDict = HttpUtility.ParseQueryString(uri.Query);
-                if (queryDict != null && queryDict.Get("url") != null)
-                {
-                    uri = new UriBuilder(HttpUtility.UrlDecode(queryDict.Get("url"))).Uri;
-                }
-            }
+            //TODO - this array should have URL expanders enabled/disabled via settings screen
+            string[] enabled_url_expanders = {
+                "safelinks.protection.outlook.com"
+            };
 
-            if (Settings.Default.expand_url == "First Redirect" || Settings.Default.expand_url == "All Redirects")
+            if (Settings.Default.expand_url != "None" &&
+                enabled_url_expanders.Contains(uri.Host))
             {
-                bool followAllRedirects = Settings.Default.expand_url == "All Redirects";
-                ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertificates);
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | (SecurityProtocolType)768 | (SecurityProtocolType)3072 | SecurityProtocolType.Ssl3; //SecurityProtocolType.Tls12;
-                var webRequest = (HttpWebRequest)WebRequest.Create(uri.AbsoluteUri);
-                webRequest.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv: 85.0) Gecko/20100101 Firefox/85.0";
-                webRequest.AllowAutoRedirect = followAllRedirects;
-                try
+                if (uri.Host.EndsWith("safelinks.protection.outlook.com"))
                 {
-                    var response = (HttpWebResponse)webRequest.GetResponse();
-                    if ((int)response.StatusCode == 307)
+                    var queryDict = HttpUtility.ParseQueryString(uri.Query);
+                    if (queryDict != null && queryDict.Get("url") != null)
                     {
-                        uri = UriExpander(new UriBuilder(response.Headers["Location"]).Uri);
+                        uri = new UriBuilder(HttpUtility.UrlDecode(queryDict.Get("url"))).Uri;
                     }
-                    else if ((int)response.StatusCode == 301 || (int)response.StatusCode == 302)
-                    {
-                        uri = new UriBuilder(response.Headers["Location"]).Uri;
-                    }
-                    else
-                    {
-                        ServicePoint sp = webRequest.ServicePoint;
-                        //Console.WriteLine("End address is " + sp.Address.ToString());
-                        uri = new UriBuilder(sp.Address.ToString()).Uri;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    
                 }
             }
 
             return uri;
         }
-
-        private static bool AcceptAllCertificates(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        private static Uri UriFollowRedirects(Uri uri, int num_redirects = 0)
         {
-            return true;
+            int max_redirects = 20;
+            switch (Settings.Default.expand_url)
+            {
+                case "None":
+                    max_redirects = 0;
+                    break;
+                case "First Redirect":
+                    max_redirects = 1;
+                    break;
+            }
+            if (num_redirects >= max_redirects)
+            {
+                return uri;
+            }
+
+            //TODO - This should be a user configurable list
+            string[] url_shortners = {
+                "adf.ly",
+                "bit.do",
+                "bit.ly",
+                "goo.gl",
+                "ht.ly",
+                "is.gd",
+                "ity.im",
+                "lnk.co",
+                "ow.ly",
+                "q.gs",
+                "rb.gy",
+                "rotf.lol",
+                "t.co",
+                "tiny.one",
+                "tinyurl.com",
+                "httpstat.us",
+                "browserselect.voxtor.ir",
+                "myts3.ir"
+            };
+
+            Form SplashScreen = null;
+            if (!Program.uriExpanderThreadStop &&
+                url_shortners.Contains(uri.Host))
+            {
+                //Console.WriteLine("num_redirects: " + num_redirects);
+                //Thread.Sleep(2000);
+                if (num_redirects == 0)
+                {
+                    SplashScreen = new frm_SplashScreen();
+                    var splashThread = new Thread(new ThreadStart(() => Application.Run(SplashScreen)));
+                    splashThread.Start();
+                }
+                HttpWebResponse response = MyWebRequest(uri);
+                if (response != null)
+                {
+                    if ((int)response.StatusCode > 299 && (int)response.StatusCode < 400)
+                    {
+                        uri = UriFollowRedirects(new UriBuilder(response.Headers["Location"]).Uri, (num_redirects + 1));
+                    }
+                    else
+                    {
+                        uri = response.ResponseUri;
+                    }
+                    Console.WriteLine("Url " + num_redirects + " " + uri.Host);
+                }
+            }
+
+            if (num_redirects == 0)
+            {
+                if (SplashScreen != null && !SplashScreen.Disposing && !SplashScreen.IsDisposed)
+                    try
+                    {
+                        Program.uriExpanderThreadStop = true;
+                        SplashScreen.Invoke(new Action(() => SplashScreen.Close()));
+                    }
+                    catch
+                    {
+
+                    }
+            }
+            return uri;
+        }
+
+        private static HttpWebResponse MyWebRequest(Uri uri)
+        {
+            //Support TLS1.2
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | (SecurityProtocolType)768 | (SecurityProtocolType)3072 | SecurityProtocolType.Ssl3; //SecurityProtocolType.Tls12;
+            var webRequest = (HttpWebRequest)WebRequest.Create(uri.AbsoluteUri);
+            // Set timeout - needs to be high enough for HTTP request to succeed on slow network connections,
+            // but fast enough not to slow down BrowserSelect startup too much.
+            // 2 seconds seems about right
+            webRequest.Timeout = 2000;
+            //webRequest.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv: 85.0) Gecko/20100101 Firefox/85.0";
+            webRequest.AllowAutoRedirect = false;
+            HttpWebResponse response = null;
+            try
+            {
+                var ar = webRequest.BeginGetResponse(null, null);
+                Program.webRequestThread = webRequest;
+                ThreadPool.RegisterWaitForSingleObject(ar.AsyncWaitHandle, new WaitOrTimerCallback(TimeoutCallback), webRequest, webRequest.Timeout, true);
+                response = (HttpWebResponse)webRequest.EndGetResponse(ar);
+            }
+            catch (Exception ex)
+            {
+                // We are mostly catch up webRequest.Abort() or webRequest errors here (e.g. untrusted certificates)
+                // No action required.
+                Console.WriteLine(ex);
+            }
+
+            return response;
+        }
+
+        // Abort the request if the timer fires.
+        private static void TimeoutCallback(object state, bool timedOut)
+        {
+            if (timedOut)
+            {
+                HttpWebRequest request = state as HttpWebRequest;
+                if (request != null)
+                {
+                    Console.WriteLine("Timed out, aborting HTTP request...");
+                    request.Abort();
+                }
+            }
         }
     }
 }
