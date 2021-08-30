@@ -327,8 +327,8 @@ namespace BrowserSelect
 
         private static HttpWebResponse MyWebRequest(Uri uri)
         {
-            //Support TLS1.2
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | (SecurityProtocolType)768 | (SecurityProtocolType)3072 | SecurityProtocolType.Ssl3; //SecurityProtocolType.Tls12;
+            //Support TLS1.2 - updated .Net framework - no longer needed
+            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | (SecurityProtocolType)768 | (SecurityProtocolType)3072 | SecurityProtocolType.Ssl3; //SecurityProtocolType.Tls12;
             var webRequest = (HttpWebRequest)WebRequest.Create(uri.AbsoluteUri);
             // Set timeout - needs to be high enough for HTTP request to succeed on slow network connections,
             // but fast enough not to slow down BrowserSelect startup too much.
