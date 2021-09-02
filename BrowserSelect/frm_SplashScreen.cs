@@ -14,6 +14,7 @@ namespace BrowserSelect
         public frm_SplashScreen()
         {
             InitializeComponent();
+            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
         }
 
         private void frm_SplashScreen_FormClosing(object sender, System.ComponentModel.CancelEventArgs e)

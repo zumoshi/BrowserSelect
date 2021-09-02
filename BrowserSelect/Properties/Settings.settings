@@ -20,8 +20,14 @@
     <Setting Name="BrowserList" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="expand_url" Type="System.String" Scope="User">
+    <Setting Name="ExpandUrl" Type="System.String" Scope="User">
       <Value Profile="(Default)">Never</Value>
+    </Setting>
+    <Setting Name="URLShortners" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="URLProcessors" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

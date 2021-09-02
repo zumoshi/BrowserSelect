@@ -96,12 +96,34 @@ namespace BrowserSelect.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Never")]
-        public string expand_url {
+        public string ExpandUrl {
             get {
-                return ((string)(this["expand_url"]));
+                return ((string)(this["ExpandUrl"]));
             }
             set {
-                this["expand_url"] = value;
+                this["ExpandUrl"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection URLShortners {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["URLShortners"]));
+            }
+            set {
+                this["URLShortners"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection URLProcessors {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["URLProcessors"]));
+            }
+            set {
+                this["URLProcessors"] = value;
             }
         }
     }

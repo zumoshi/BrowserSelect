@@ -19,12 +19,14 @@ namespace BrowserSelect
         public frm_settings()
         {
             InitializeComponent();
+            this.Icon = Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
         }
 
         public frm_settings(Form mainForm)
         {
             this.mainForm = (Form1)mainForm;
             InitializeComponent();
+            this.Icon = Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
         }
 
         private List<AutoMatchRule> rules = new List<AutoMatchRule>();
@@ -63,8 +65,9 @@ namespace BrowserSelect
 
             chk_check_update.Checked = Settings.Default.check_update != "nope";
 
-            cmbo_expand_url.DataSource = (new string[] { "Never", "First Redirect", "All Redirects" });
-            cmbo_expand_url.SelectedItem = Settings.Default.expand_url;
+            // TODO move this to expand_url form
+            //cmbo_expand_url.DataSource = (new string[] { "Never", "First Redirect", "All Redirects" });
+            //cmbo_expand_url.SelectedItem = Settings.Default.expand_url;
 
         }
 
@@ -251,8 +254,13 @@ namespace BrowserSelect
 
         private void cmbo_expand_url_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            Settings.Default.expand_url = (string)((ComboBox)sender).SelectedItem;
+            Settings.Default.ExpandUrl = (string)((ComboBox)sender).SelectedItem;
             Settings.Default.Save();
+        }
+
+         private void btn_expandurls_Click(object sender, EventArgs e)
+        {
+            (new frm_settings_urlexpander()).ShowDialog();
         }
     }
     class AutoMatchRule

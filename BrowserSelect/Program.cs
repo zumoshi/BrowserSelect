@@ -18,6 +18,12 @@ namespace BrowserSelect
         public static string url = "";
         public static HttpWebRequest webRequestThread = null;
         public static bool uriExpanderThreadStop = false;
+        public static (string name, string domain)[] defaultUriExpander = new(string name, string domain)[]
+            {
+                ("Outlook safe links", "safelinks.protection.outlook.com")//,
+                //("Test1", "test.com"),
+                //("Test2", "test2.com")
+            };
 
         /// <summary>
         /// The main entry point for the application.
@@ -47,6 +53,31 @@ namespace BrowserSelect
                 var uc = new UpdateChecker();
                 Task.Factory.StartNew(() => uc.check());
             }
+            //load URL Shortners
+            string[] defultUrlShortners = new string[] {
+                "adf.ly",
+                "bit.do",
+                "bit.ly",
+                "goo.gl",
+                "ht.ly",
+                "is.gd",
+                "ity.im",
+                "lnk.co",
+                "ow.ly",
+                "q.gs",
+                "rb.gy",
+                "rotf.lol",
+                "t.co",
+                "tiny.one",
+                "tinyurl.com"
+            };
+            if (Settings.Default.URLShortners == null)
+            {
+                StringCollection url_shortners = new StringCollection();
+                url_shortners.AddRange(defultUrlShortners);
+                Settings.Default.URLShortners = url_shortners;
+                Settings.Default.Save();
+            }
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -59,7 +90,8 @@ namespace BrowserSelect
                 //add http:// to url if it is missing a protocol
                 var uri = new UriBuilder(url).Uri;
                 uri = UriExpander(uri);
-                uri = UriFollowRedirects(uri);
+                if (Settings.Default.ExpandUrl != null && Settings.Default.ExpandUrl != "Never")
+                    uri = UriFollowRedirects(uri);
                 url = uri.AbsoluteUri;
 
                 foreach (var sr in Settings.Default.AutoBrowser.Cast<string>()
@@ -223,22 +255,26 @@ namespace BrowserSelect
 
         private static Uri UriExpander(Uri uri)
         {
-            //TODO - this array should have URL expanders enabled/disabled via settings screen
-            string[] enabled_url_expanders = {
-                "safelinks.protection.outlook.com"
-            };
+            List<string> enabled_url_expanders = new List<string>();
+            if (Settings.Default.URLProcessors != null)
+            {
+                foreach ((string name, string domain) in defaultUriExpander)
+                {
+                    if (Settings.Default.URLProcessors.Contains(name))
+                    {
+                        enabled_url_expanders.Add(domain);
+                    }
+                }
+            }
 
             System.Diagnostics.Debug.WriteLine("URLExpander: " + uri.Host);
-            if (Settings.Default.expand_url != "None" &&
-                Array.Exists(enabled_url_expanders, ele => uri.Host.EndsWith(ele)))
+            if (uri.Host.EndsWith("safelinks.protection.outlook.com") &&
+                enabled_url_expanders.Contains("safelinks.protection.outlook.com"))
             {
-                if (uri.Host.EndsWith("safelinks.protection.outlook.com"))
+                var queryDict = HttpUtility.ParseQueryString(uri.Query);
+                if (queryDict != null && queryDict.Get("url") != null)
                 {
-                    var queryDict = HttpUtility.ParseQueryString(uri.Query);
-                    if (queryDict != null && queryDict.Get("url") != null)
-                    {
-                        uri = new UriBuilder(HttpUtility.UrlDecode(queryDict.Get("url"))).Uri;
-                    }
+                    uri = new UriBuilder(HttpUtility.UrlDecode(queryDict.Get("url"))).Uri;
                 }
             }
 
@@ -247,46 +283,15 @@ namespace BrowserSelect
         private static Uri UriFollowRedirects(Uri uri, int num_redirects = 0)
         {
             int max_redirects = 20;
-            switch (Settings.Default.expand_url)
-            {
-                case "None":
-                    max_redirects = 0;
-                    break;
-                case "First Redirect":
-                    max_redirects = 1;
-                    break;
-            }
             if (num_redirects >= max_redirects)
             {
                 return uri;
             }
             System.Diagnostics.Debug.WriteLine("Url " + num_redirects + " " + uri.Host);
-
-            //TODO - This should be a user configurable list
-            string[] url_shortners = {
-                "adf.ly",
-                "bit.do",
-                "bit.ly",
-                "goo.gl",
-                "ht.ly",
-                "is.gd",
-                "ity.im",
-                "lnk.co",
-                "ow.ly",
-                "q.gs",
-                "rb.gy",
-                "rotf.lol",
-                "t.co",
-                "tiny.one",
-                "tinyurl.com",
-                "httpstat.us",
-                "browserselect.voxtor.ir",
-                "myts3.ir"
-            };
-
+            StringCollection url_shortners = Settings.Default.URLShortners;
             Form SplashScreen = null;
             if (!Program.uriExpanderThreadStop &&
-                url_shortners.Contains(uri.Host))
+                (url_shortners.Contains(uri.Host) || Settings.Default.ExpandUrl == "Follow all redirects"))
             {
                 //Thread.Sleep(2000);
                 if (num_redirects == 0)

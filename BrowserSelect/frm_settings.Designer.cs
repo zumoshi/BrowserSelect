@@ -30,8 +30,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.browser_filter = new System.Windows.Forms.CheckedListBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cmbo_expand_url = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.btn_expandurls = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btn_cancel = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -100,8 +99,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.cmbo_expand_url);
-            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.btn_expandurls);
             this.groupBox2.Controls.Add(this.btn_setdefault);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Location = new System.Drawing.Point(15, 143);
@@ -111,24 +109,15 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Options";
             // 
-            // cmbo_expand_url
+            // btn_expandurls
             // 
-            this.cmbo_expand_url.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbo_expand_url.FormattingEnabled = true;
-            this.cmbo_expand_url.Location = new System.Drawing.Point(9, 96);
-            this.cmbo_expand_url.Name = "cmbo_expand_url";
-            this.cmbo_expand_url.Size = new System.Drawing.Size(132, 21);
-            this.cmbo_expand_url.TabIndex = 3;
-            this.cmbo_expand_url.SelectionChangeCommitted += new System.EventHandler(this.cmbo_expand_url_SelectionChangeCommitted);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 81);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(64, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Expand Urls";
+            this.btn_expandurls.Location = new System.Drawing.Point(6, 84);
+            this.btn_expandurls.Name = "btn_expandurls";
+            this.btn_expandurls.Size = new System.Drawing.Size(135, 31);
+            this.btn_expandurls.TabIndex = 3;
+            this.btn_expandurls.Text = "URL Expander Config";
+            this.btn_expandurls.UseVisualStyleBackColor = true;
+            this.btn_expandurls.Click += new System.EventHandler(this.btn_expandurls_Click);
             // 
             // groupBox3
             // 
@@ -206,6 +195,7 @@
             this.browser});
             this.gv_filters.Location = new System.Drawing.Point(6, 59);
             this.gv_filters.Name = "gv_filters";
+            this.gv_filters.RowHeadersWidth = 30;
             this.gv_filters.Size = new System.Drawing.Size(432, 266);
             this.gv_filters.TabIndex = 6;
             this.gv_filters.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.gv_filters_CellBeginEdit);
@@ -218,6 +208,7 @@
             this.pattern.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.pattern.DataPropertyName = "Pattern";
             this.pattern.HeaderText = "Domain Pattern";
+            this.pattern.MinimumWidth = 10;
             this.pattern.Name = "pattern";
             this.pattern.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
@@ -226,6 +217,7 @@
             this.browser.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.browser.DataPropertyName = "Browser";
             this.browser.HeaderText = "Browser";
+            this.browser.MinimumWidth = 10;
             this.browser.Name = "browser";
             this.browser.Width = 51;
             // 
@@ -284,7 +276,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.MinimumSize = new System.Drawing.Size(358, 414);
+            this.MinimumSize = new System.Drawing.Size(353, 399);
             this.Name = "frm_settings";
             this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frm_settings_FormClosing);
@@ -292,7 +284,6 @@
             this.Load += new System.EventHandler(this.frm_settings_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gv_filters)).EndInit();
             this.groupBox4.ResumeLayout(false);
@@ -321,7 +312,6 @@
         private System.Windows.Forms.CheckBox chk_check_update;
         private System.Windows.Forms.Button btn_check_update;
         private System.Windows.Forms.Button btn_refresh;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox cmbo_expand_url;
+        private System.Windows.Forms.Button btn_expandurls;
     }
 }

@@ -77,6 +77,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="frm_settings_urlexpander.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_settings_urlexpander.Designer.cs">
+      <DependentUpon>frm_settings_urlexpander.cs</DependentUpon>
+    </Compile>
     <Compile Include="frm_SplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -122,6 +128,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_settings_urlexpander.resx">
+      <DependentUpon>frm_settings_urlexpander.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frm_SplashScreen.resx">
       <DependentUpon>frm_SplashScreen.cs</DependentUpon>
