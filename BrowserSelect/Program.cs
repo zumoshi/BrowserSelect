@@ -10,6 +10,8 @@ using BrowserSelect.Properties;
 using System.Web;
 using System.Net;
 using System.Threading;
+using Newtonsoft.Json;
+using System.Data;
 
 namespace BrowserSelect
 {
@@ -31,8 +33,6 @@ namespace BrowserSelect
         [STAThread]
         static void Main(string[] args)
         {
-            // fix #28
-            LeaveDotsAndSlashesEscaped();
             // to prevent loss of settings when on update
             if (Settings.Default.UpdateSettings)
             {
@@ -94,32 +94,9 @@ namespace BrowserSelect
                     uri = UriFollowRedirects(uri);
                 url = uri.AbsoluteUri;
 
-                foreach (var sr in Settings.Default.AutoBrowser.Cast<string>()
-                    // maybe i should use a better way to split the pattern and browser name ?
-                    .Select(x => x.Split(new[] { "[#!][$~][?_]" }, StringSplitOptions.None))
-                    // to make sure * doesn't match when non-* rules exist.
-                    .OrderBy(x => ((x[0].Contains("*")) ? 1 : 0) + (x[0] == "*" ? 1 : 0)))
-                {
-                    var pattern = sr[0];
-                    var browser = sr[1];
-
-                    // matching the domain to pattern
-                    if (DoesDomainMatchPattern(uri.Host, pattern))
-                    {
-                        // ignore the display browser select entry to prevent app running itself
-                        if (browser != "display BrowserSelect")
-                        {
-                            //todo: handle the case if browser is not found (e.g. imported settings or uninstalled browser)
-                            Form1.open_url((Browser)browser);
-                            return;
-                        }
-                        else
-                        {
-                            // simply break the loop to let the app display selection dialogue
-                            break;
-                        }
-                    }
-                }
+                //if we loaded the browser finish execution here...
+                if (load_browser(uri))
+                    return;
             }
 
             // display main form
@@ -129,6 +106,71 @@ namespace BrowserSelect
                 Application.Run(new Form1());
             else
                 Application.Run(new frm_settings());
+        }
+
+        private static Boolean load_browser(Uri uri)
+        {
+            if (Settings.Default.Rules != null && Settings.Default.Rules != "")
+            {
+                DataTable rules = (DataTable)JsonConvert.DeserializeObject(Settings.Default.Rules, (typeof(DataTable)));
+                foreach (DataRow rule in rules.Rows)
+                {
+                    Boolean rule_match = false;
+                    string match_type = (string)rule["Type"];
+                    string match = (string)rule["Match"];
+                    string pattern = (string)rule["Pattern"];
+
+                    string test_uri = "";
+                    if (match == "Domain")
+                        test_uri = uri.Host;
+                    else if (match == "URL Path")
+                        test_uri = uri.PathAndQuery;
+                    else if (match == "Full URL")
+                        test_uri = uri.AbsoluteUri;
+
+                    switch (match_type)
+                    {
+                        case "Ends With":
+                            if (test_uri.EndsWith(pattern, StringComparison.OrdinalIgnoreCase))
+                                rule_match = true;
+                            break;
+                        case "Starts With":
+                            if (test_uri.StartsWith(pattern, StringComparison.OrdinalIgnoreCase))
+                                rule_match = true;
+                            break;
+                        case "Contains":
+                            if (test_uri.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0)
+                                rule_match = true;
+                            break;
+                        case "Matches":
+                            if (test_uri.Equals(pattern, StringComparison.OrdinalIgnoreCase))
+                                rule_match = true;
+                            break;
+                        case "RegEx":
+                            Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
+                            if (regex.IsMatch(test_uri))
+                                rule_match = true;
+                            break;
+                    }
+
+                    if (rule_match)
+                    {
+                        System.Diagnostics.Debug.WriteLine(test_uri + " " + match_type + " " + pattern);
+                        string browser = (string)rule["Browser"];
+                        if (browser != "display BrowserSelect")
+                            Form1.open_url((Browser)browser);
+                        return true;
+                    }
+                }
+            }
+            if (Settings.Default.DefaultBrowser != null &&
+                Settings.Default.DefaultBrowser != "" &&
+                Settings.Default.DefaultBrowser != "display BrowserSelect")
+            {
+                Form1.open_url((Browser)Settings.Default.DefaultBrowser);
+                return true;
+            }
+            return false;
         }
 
         // from : http://stackoverflow.com/a/250400/1461004
@@ -191,68 +233,6 @@ namespace BrowserSelect
             return Environment.GetEnvironmentVariable("ProgramFiles");
         }
 
-
-        /// <summary>
-        /// Checks if a wildcard string matches a domain
-        /// taken from http://madskristensen.net/post/wildcard-search-for-domains-in-c
-        /// </summary>
-        public static bool DoesDomainMatchPattern(string domain, string domainToCheck)
-        {
-            if (domainToCheck.Contains("*"))
-            {
-                string checkDomain = domainToCheck;
-                if (checkDomain.StartsWith("*."))
-                    checkDomain = "*" + checkDomain.Substring(2, checkDomain.Length - 2);
-                return DoesWildcardMatch(domain, checkDomain);
-            }
-            else
-            {
-                return domainToCheck.Equals(domain, StringComparison.OrdinalIgnoreCase);
-            }
-        }
-        /// <summary>
-        /// Performs a wildcard (*) search on any string.
-        /// </summary>
-        public static bool DoesWildcardMatch(string originalString, string searchString)
-        {
-            if (!searchString.StartsWith("*"))
-            {
-                int stop = searchString.IndexOf('*');
-                if (!originalString.StartsWith(searchString.Substring(0, stop)))
-                    return false;
-            }
-            if (!searchString.EndsWith("*"))
-            {
-                int start = searchString.LastIndexOf('*') + 1;
-                if (!originalString.EndsWith(searchString.Substring(start, searchString.Length - start)))
-                    return false;
-            }
-            Regex regex = new Regex(searchString.Replace(@".", @"\.").Replace(@"*", @".*"));
-            return regex.IsMatch(originalString);
-        }
-
-        // https://stackoverflow.com/a/7202560/1461004
-        private static void LeaveDotsAndSlashesEscaped()
-        {
-            var getSyntaxMethod =
-                typeof(UriParser).GetMethod("GetSyntax", BindingFlags.Static | BindingFlags.NonPublic);
-            if (getSyntaxMethod == null)
-            {
-                throw new MissingMethodException("UriParser", "GetSyntax");
-            }
-
-            var uriParser = getSyntaxMethod.Invoke(null, new object[] { "http" });
-
-            var setUpdatableFlagsMethod =
-                uriParser.GetType().GetMethod("SetUpdatableFlags", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (setUpdatableFlagsMethod == null)
-            {
-                throw new MissingMethodException("UriParser", "SetUpdatableFlags");
-            }
-
-            setUpdatableFlagsMethod.Invoke(uriParser, new object[] { 0 });
-        }
-
         private static Uri UriExpander(Uri uri)
         {
             List<string> enabled_url_expanders = new List<string>();
@@ -280,6 +260,7 @@ namespace BrowserSelect
 
             return uri;
         }
+
         private static Uri UriFollowRedirects(Uri uri, int num_redirects = 0)
         {
             int max_redirects = 20;

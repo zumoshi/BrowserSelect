@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using BrowserSelect.Properties;
+using Newtonsoft.Json;
 using SHDocVw;
 
 namespace BrowserSelect
@@ -119,12 +121,22 @@ namespace BrowserSelect
 
         private void save_rule(string pattern, Browser b)
         {
-            // save a rule and save app settings
-            Settings.Default.AutoBrowser.Add((new AutoMatchRule()
+            // add a rule and save app settings
+            DataTable rules;
+            if (Settings.Default.Rules != null && Settings.Default.Rules != "")
+                rules = (DataTable)JsonConvert.DeserializeObject(Settings.Default.Rules, (typeof(DataTable)));
+            else
             {
-                Pattern = pattern,
-                Browser = b.name
-            }).ToString());
+                rules = new DataTable();
+                rules.Columns.Add("Type");
+                rules.Columns.Add("Match");
+                rules.Columns.Add("Pattern");
+                rules.Columns.Add("Browser");
+            }
+            if (pattern.StartsWith("*."))
+                pattern = pattern.Substring(2);
+            rules.Rows.Add("Ends With", "Domain", pattern, b.name);
+            Settings.Default.Rules = JsonConvert.SerializeObject(rules);
             Settings.Default.Save();
         }
 

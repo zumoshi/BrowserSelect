@@ -126,5 +126,29 @@ namespace BrowserSelect.Properties {
                 this["URLProcessors"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultBrowser {
+            get {
+                return ((string)(this["DefaultBrowser"]));
+            }
+            set {
+                this["DefaultBrowser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Rules {
+            get {
+                return ((string)(this["Rules"]));
+            }
+            set {
+                this["Rules"] = value;
+            }
+        }
     }
 }

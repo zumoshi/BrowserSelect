@@ -21,7 +21,7 @@ namespace BrowserSelect
         private void frm_settings_urlexpander_Load(object sender, EventArgs e)
         {
             cmbo_expand_url.DataSource = (new string[] { "Never", "URL shortners", "Follow all redirects" });
-            if (Properties.Settings.Default.ExpandUrl == null)
+            if (Properties.Settings.Default.ExpandUrl == null || Properties.Settings.Default.ExpandUrl == "")
                 cmbo_expand_url.SelectedItem = "Never";
             else
                 cmbo_expand_url.SelectedItem = Properties.Settings.Default.ExpandUrl;
