@@ -26,10 +26,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_settings));
             this.btn_setdefault = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.browser_filter = new System.Windows.Forms.CheckedListBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chk_launch_settings = new System.Windows.Forms.CheckBox();
             this.btn_expandurls = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -74,15 +74,6 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "BrowserSelect must be the default browser.";
             // 
-            // label2
-            // 
-            this.label2.Location = new System.Drawing.Point(12, 316);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(150, 56);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "if you have feature requests,bug reports or suggestions please submit an issue on" +
-    " the project\'s Github.";
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.browser_filter);
@@ -105,15 +96,27 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.chk_launch_settings);
             this.groupBox2.Controls.Add(this.btn_expandurls);
             this.groupBox2.Controls.Add(this.btn_setdefault);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Location = new System.Drawing.Point(15, 143);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(147, 123);
+            this.groupBox2.Size = new System.Drawing.Size(147, 157);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Options";
+            // 
+            // chk_launch_settings
+            // 
+            this.chk_launch_settings.AutoSize = true;
+            this.chk_launch_settings.Location = new System.Drawing.Point(9, 122);
+            this.chk_launch_settings.Name = "chk_launch_settings";
+            this.chk_launch_settings.Size = new System.Drawing.Size(131, 30);
+            this.chk_launch_settings.TabIndex = 4;
+            this.chk_launch_settings.Text = "launch straight to\r\nsettings when no URL";
+            this.chk_launch_settings.UseVisualStyleBackColor = true;
+            this.chk_launch_settings.CheckedChanged += new System.EventHandler(this.chk_launch_settings_CheckedChanged);
             // 
             // btn_expandurls
             // 
@@ -191,7 +194,7 @@
             // linkLabel1
             // 
             this.linkLabel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.linkLabel1.LinkArea = new System.Windows.Forms.LinkArea(212, 235);
+            this.linkLabel1.LinkArea = new System.Windows.Forms.LinkArea(247, 17);
             this.linkLabel1.Location = new System.Drawing.Point(3, 16);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(520, 40);
@@ -287,7 +290,7 @@
             // 
             this.groupBox4.Controls.Add(this.chk_check_update);
             this.groupBox4.Controls.Add(this.btn_check_update);
-            this.groupBox4.Location = new System.Drawing.Point(12, 272);
+            this.groupBox4.Location = new System.Drawing.Point(12, 331);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(150, 41);
             this.groupBox4.TabIndex = 2;
@@ -360,7 +363,6 @@
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.label2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MinimumSize = new System.Drawing.Size(353, 399);
             this.Name = "frm_settings";
@@ -370,6 +372,7 @@
             this.Load += new System.EventHandler(this.frm_settings_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gv_filters)).EndInit();
@@ -383,7 +386,6 @@
 
         private System.Windows.Forms.Button btn_setdefault;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckedListBox browser_filter;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -406,5 +408,6 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn match;
         private System.Windows.Forms.DataGridViewTextBoxColumn pattern;
         private System.Windows.Forms.DataGridViewComboBoxColumn browser;
+        private System.Windows.Forms.CheckBox chk_launch_settings;
     }
 }

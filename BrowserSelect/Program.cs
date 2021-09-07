@@ -102,10 +102,10 @@ namespace BrowserSelect
             // display main form
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
-            if (url != "")
-                Application.Run(new Form1());
-            else
+            if (url == "" && (Boolean)Settings.Default.LaunchToSettings)
                 Application.Run(new frm_settings());
+            else
+                Application.Run(new Form1());
         }
 
         private static Boolean load_browser(Uri uri)

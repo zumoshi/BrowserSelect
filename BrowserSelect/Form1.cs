@@ -53,15 +53,18 @@ namespace BrowserSelect
         }
 
         private void Form1_Load(object sender, EventArgs e)
-        {   
+        {
             this.AutoSize = true;
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             this.KeyPreview = true;
-            this.Text = Program.url;
             // set the form icon from .exe file icon
             this.Icon = IconExtractor.fromFile(Application.ExecutablePath);
             // create a wildcard rule for this domain (always button)
-            _alwaysRule = generate_rule(Program.url);
+            if (Program.url != "")
+            {
+                _alwaysRule = generate_rule(Program.url);
+                this.Text = Program.url;
+            }
             // check for new version
             if (Settings.Default.last_version != "nope")
             {

@@ -79,6 +79,7 @@ namespace BrowserSelect
             }
 
             chk_check_update.Checked = Settings.Default.check_update != "nope";
+            chk_launch_settings.Checked = (Boolean)Settings.Default.LaunchToSettings;
         }
 
         private Boolean check_rules()
@@ -421,6 +422,12 @@ namespace BrowserSelect
             {
                 Debug.WriteLine(ex);
             }
+        }
+
+        private void chk_launch_settings_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Default.LaunchToSettings = ((CheckBox)sender).Checked;
+            Settings.Default.Save();
         }
     }
 }
