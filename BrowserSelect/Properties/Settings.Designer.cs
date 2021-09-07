@@ -126,5 +126,17 @@ namespace BrowserSelect.Properties {
                 this["URLProcessors"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LaunchToSettings {
+            get {
+                return ((bool)(this["LaunchToSettings"]));
+            }
+            set {
+                this["LaunchToSettings"] = value;
+            }
+        }
     }
 }

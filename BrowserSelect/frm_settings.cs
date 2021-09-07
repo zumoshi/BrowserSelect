@@ -64,7 +64,8 @@ namespace BrowserSelect
             gv_filters.DataSource = bs;
 
             chk_check_update.Checked = Settings.Default.check_update != "nope";
-
+            chk_launch_settings.Checked = (Boolean)Settings.Default.LaunchToSettings;
+            
             // TODO move this to expand_url form
             //cmbo_expand_url.DataSource = (new string[] { "Never", "First Redirect", "All Redirects" });
             //cmbo_expand_url.SelectedItem = Settings.Default.expand_url;
@@ -261,6 +262,12 @@ namespace BrowserSelect
          private void btn_expandurls_Click(object sender, EventArgs e)
         {
             (new frm_settings_urlexpander()).ShowDialog();
+        }
+
+        private void chk_launch_settings_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Default.LaunchToSettings = ((CheckBox)sender).Checked;
+            Settings.Default.Save();
         }
     }
     class AutoMatchRule

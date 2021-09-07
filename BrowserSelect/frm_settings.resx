@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="linkLabel1.Text" xml:space="preserve">
-    <value>Using this section you can add rules that based on them browser select will automatically choose a browser instead of displaying the list for you to choose manually. more information and examples can be found on the project's github.
+    <value>Using this section you can add rules to enable BrowserSelect to automatically choose a browser instead of displaying the browser list. More information and examples on filters, plus feature requests, bug reports or suggestions can be found on the project's github.
 </value>
   </data>
   <metadata name="pattern.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
