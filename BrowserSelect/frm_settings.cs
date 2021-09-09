@@ -119,7 +119,7 @@ namespace BrowserSelect
             var dgv = sender as DataGridView;
 
             // Check to make sure the cell clicked is the cell containing the combobox 
-            if (dgv.Columns[e.ColumnIndex] is DataGridViewComboBoxColumn && validClick)
+            if (e.ColumnIndex > 0 && dgv.Columns[e.ColumnIndex] is DataGridViewComboBoxColumn && validClick)
             {
                 dgv.BeginEdit(true);
                 ((ComboBox)dgv.EditingControl).DroppedDown = true;
