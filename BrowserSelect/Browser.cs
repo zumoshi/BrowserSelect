@@ -233,12 +233,13 @@ namespace BrowserSelect
                             icon = icon2String(IconExtractor.fromFile(exec))
                         });
                     }
-                    catch (NullReferenceException)
+                    catch (NullReferenceException ex)
                     {
+                        System.Diagnostics.Debug.WriteLine(ex);
                     } // incomplete registry record for browser, ignore it
                     catch (Exception ex)
                     {
-                        // todo: log errors
+                        System.Diagnostics.Debug.WriteLine(ex);
                     }
                 }
             return browsers;

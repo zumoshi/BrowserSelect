@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using BrowserSelect.Properties;
+using Newtonsoft.Json;
 using SHDocVw;
 
 namespace BrowserSelect
@@ -19,6 +21,7 @@ namespace BrowserSelect
         public Form1()
         {
             InitializeComponent();
+            MaximizeBox = false;
         }
 
         public void updateBrowsers()
@@ -50,15 +53,18 @@ namespace BrowserSelect
         }
 
         private void Form1_Load(object sender, EventArgs e)
-        {   
+        {
             this.AutoSize = true;
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             this.KeyPreview = true;
-            this.Text = Program.url;
             // set the form icon from .exe file icon
             this.Icon = IconExtractor.fromFile(Application.ExecutablePath);
             // create a wildcard rule for this domain (always button)
-            _alwaysRule = generate_rule(Program.url);
+            if (Program.url != "")
+            {
+                _alwaysRule = generate_rule(Program.url);
+                this.Text = Program.url;
+            }
             // check for new version
             if (Settings.Default.last_version != "nope")
             {
@@ -118,12 +124,22 @@ namespace BrowserSelect
 
         private void save_rule(string pattern, Browser b)
         {
-            // save a rule and save app settings
-            Settings.Default.AutoBrowser.Add((new AutoMatchRule()
+            // add a rule and save app settings
+            DataTable rules;
+            if (Settings.Default.Rules != null && Settings.Default.Rules != "")
+                rules = (DataTable)JsonConvert.DeserializeObject(Settings.Default.Rules, (typeof(DataTable)));
+            else
             {
-                Pattern = pattern,
-                Browser = b.name
-            }).ToString());
+                rules = new DataTable();
+                rules.Columns.Add("Type");
+                rules.Columns.Add("Match");
+                rules.Columns.Add("Pattern");
+                rules.Columns.Add("Browser");
+            }
+            if (pattern.StartsWith("*."))
+                pattern = pattern.Substring(2);
+            rules.Rows.Add("Ends With", "Domain", pattern, b.name);
+            Settings.Default.Rules = JsonConvert.SerializeObject(rules);
             Settings.Default.Save();
         }
 
@@ -161,7 +177,9 @@ namespace BrowserSelect
                 x = parts[count - 2]; //second-level
                 y = parts[count - 3]; //third-level
             }
-            catch (IndexOutOfRangeException) { } // in case domain did not have 3 parts.. (e.g. localhost, google.com)
+            catch (IndexOutOfRangeException ex) {
+                Debug.WriteLine(ex);
+            } // in case domain did not have 3 parts.. (e.g. localhost, google.com)
 
             // creating the patterns
             var rule_tld = String.Format("*.{0}.{1}", x, tld);
@@ -253,7 +271,12 @@ namespace BrowserSelect
             }
             else
             {
-                Process.Start(b.exec, Program.Args2Str(args));
+                ProcessStartInfo startInfo = new ProcessStartInfo(b.exec);
+                // Clicking MS Edge takes more than 4 seconds to load, even with an existing window
+                // Disabling UseShellExecute to create the process directly from the browser executable file
+                startInfo.UseShellExecute = false;
+                startInfo.Arguments = Program.Args2Str(args);
+                Process.Start(startInfo);
             }
             Application.Exit();
         }
@@ -284,7 +307,15 @@ namespace BrowserSelect
             var top = wa.Height / 2 + wa.Top - Height / 2;
 
             this.Location = new Point(left, top);
-            this.Activate();
+
+            
+            // Borrowed from https://stackoverflow.com/a/5853542
+            // Get the window to the front
+            this.TopMost = true;
+            this.TopMost = false;
+
+            // "Steal" the focus
+            this.Activate();            
         }
 
         private void btn_help_Click(object sender, EventArgs e)

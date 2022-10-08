@@ -7,12 +7,25 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrowserSelect.Properties;
+using System.Web;
+using System.Net;
+using System.Threading;
+using Newtonsoft.Json;
+using System.Data;
 
 namespace BrowserSelect
 {
     static class Program
     {
-        public static string url = "http://google.com/";
+        public static string url = "";
+        public static HttpWebRequest webRequestThread = null;
+        public static bool uriExpanderThreadStop = false;
+        public static (string name, string domain)[] defaultUriExpander = new(string name, string domain)[]
+            {
+                ("Outlook safe links", "safelinks.protection.outlook.com")//,
+                //("Test1", "test.com"),
+                //("Test2", "test2.com")
+            };
 
         /// <summary>
         /// The main entry point for the application.
@@ -20,9 +33,6 @@ namespace BrowserSelect
         [STAThread]
         static void Main(string[] args)
         {
-
-            // fix #28
-            LeaveDotsAndSlashesEscaped();
             // to prevent loss of settings when on update
             if (Settings.Default.UpdateSettings)
             {
@@ -43,6 +53,35 @@ namespace BrowserSelect
                 var uc = new UpdateChecker();
                 Task.Factory.StartNew(() => uc.check());
             }
+            //load URL Shortners
+            string[] defultUrlShortners = new string[] {
+                "adf.ly",
+                "bit.do",
+                "bit.ly",
+                "goo.gl",
+                "ht.ly",
+                "is.gd",
+                "ity.im",
+                "lnk.co",
+                "ow.ly",
+                "q.gs",
+                "rb.gy",
+                "rotf.lol",
+                "t.co",
+                "tiny.one",
+                "tinyurl.com"
+            };
+            if (Settings.Default.URLShortners == null)
+            {
+                StringCollection url_shortners = new StringCollection();
+                url_shortners.AddRange(defultUrlShortners);
+                Settings.Default.URLShortners = url_shortners;
+                Settings.Default.Save();
+            }
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
             //checking if a url is being opened or app is ran from start menu (without arguments)
             if (args.Length > 0)
             {
@@ -50,40 +89,88 @@ namespace BrowserSelect
                 url = args[0];
                 //add http:// to url if it is missing a protocol
                 var uri = new UriBuilder(url).Uri;
+                uri = UriExpander(uri);
+                if (Settings.Default.ExpandUrl != null && Settings.Default.ExpandUrl != "Never")
+                    uri = UriFollowRedirects(uri);
                 url = uri.AbsoluteUri;
 
-                foreach (var sr in Settings.Default.AutoBrowser.Cast<string>()
-                    // maybe i should use a better way to split the pattern and browser name ?
-                    .Select(x => x.Split(new[] { "[#!][$~][?_]" }, StringSplitOptions.None))
-                    // to make sure * doesn't match when non-* rules exist.
-                    .OrderBy(x => ((x[0].Contains("*")) ? 1 : 0) + (x[0] == "*" ? 1 : 0)))
-                {
-                    var pattern = sr[0];
-                    var browser = sr[1];
-
-                    // matching the domain to pattern
-                    if (DoesDomainMatchPattern(uri.Host, pattern))
-                    {
-                        // ignore the display browser select entry to prevent app running itself
-                        if (browser != "display BrowserSelect")
-                        {
-                            //todo: handle the case if browser is not found (e.g. imported settings or uninstalled browser)
-                            Form1.open_url((Browser)browser);
-                            return;
-                        }
-                        else
-                        {
-                            // simply break the loop to let the app display selection dialogue
-                            break;
-                        }
-                    }
-                }
+                //if we loaded the browser finish execution here...
+                if (load_browser(uri))
+                    return;
             }
 
             // display main form
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            //Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
+            if (url == "" && (Boolean)Settings.Default.LaunchToSettings)
+                Application.Run(new frm_settings());
+            else
+                Application.Run(new Form1());
+        }
+
+        private static Boolean load_browser(Uri uri)
+        {
+            if (Settings.Default.Rules != null && Settings.Default.Rules != "")
+            {
+                DataTable rules = (DataTable)JsonConvert.DeserializeObject(Settings.Default.Rules, (typeof(DataTable)));
+                foreach (DataRow rule in rules.Rows)
+                {
+                    Boolean rule_match = false;
+                    string match_type = (string)rule["Type"];
+                    string match = (string)rule["Match"];
+                    string pattern = (string)rule["Pattern"];
+
+                    string test_uri = "";
+                    if (match == "Domain")
+                        test_uri = uri.Host;
+                    else if (match == "URL Path")
+                        test_uri = uri.PathAndQuery;
+                    else if (match == "Full URL")
+                        test_uri = uri.AbsoluteUri;
+
+                    switch (match_type)
+                    {
+                        case "Ends With":
+                            if (test_uri.EndsWith(pattern, StringComparison.OrdinalIgnoreCase))
+                                rule_match = true;
+                            break;
+                        case "Starts With":
+                            if (test_uri.StartsWith(pattern, StringComparison.OrdinalIgnoreCase))
+                                rule_match = true;
+                            break;
+                        case "Contains":
+                            if (test_uri.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0)
+                                rule_match = true;
+                            break;
+                        case "Matches":
+                            if (test_uri.Equals(pattern, StringComparison.OrdinalIgnoreCase))
+                                rule_match = true;
+                            break;
+                        case "RegEx":
+                            Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
+                            if (regex.IsMatch(test_uri))
+                                rule_match = true;
+                            break;
+                    }
+
+                    if (rule_match)
+                    {
+                        System.Diagnostics.Debug.WriteLine(test_uri + " " + match_type + " " + pattern);
+                        string browser = (string)rule["Browser"];
+                        if (browser != "display BrowserSelect")
+                            Form1.open_url((Browser)browser);
+                        return true;
+                    }
+                }
+            }
+            if (Settings.Default.DefaultBrowser != null &&
+                Settings.Default.DefaultBrowser != "" &&
+                Settings.Default.DefaultBrowser != "display BrowserSelect")
+            {
+                Form1.open_url((Browser)Settings.Default.DefaultBrowser);
+                return true;
+            }
+            return false;
         }
 
         // from : http://stackoverflow.com/a/250400/1461004
@@ -146,66 +233,126 @@ namespace BrowserSelect
             return Environment.GetEnvironmentVariable("ProgramFiles");
         }
 
+        private static Uri UriExpander(Uri uri)
+        {
+            List<string> enabled_url_expanders = new List<string>();
+            if (Settings.Default.URLProcessors != null)
+            {
+                foreach ((string name, string domain) in defaultUriExpander)
+                {
+                    if (Settings.Default.URLProcessors.Contains(name))
+                    {
+                        enabled_url_expanders.Add(domain);
+                    }
+                }
+            }
 
-        /// <summary>
-        /// Checks if a wildcard string matches a domain
-        /// taken from http://madskristensen.net/post/wildcard-search-for-domains-in-c
-        /// </summary>
-        public static bool DoesDomainMatchPattern(string domain, string domainToCheck)
-        {
-            if (domainToCheck.Contains("*"))
+            System.Diagnostics.Debug.WriteLine("URLExpander: " + uri.Host);
+            if (uri.Host.EndsWith("safelinks.protection.outlook.com") &&
+                enabled_url_expanders.Contains("safelinks.protection.outlook.com"))
             {
-                string checkDomain = domainToCheck;
-                if (checkDomain.StartsWith("*."))
-                    checkDomain = "*" + checkDomain.Substring(2, checkDomain.Length - 2);
-                return DoesWildcardMatch(domain, checkDomain);
+                var queryDict = HttpUtility.ParseQueryString(uri.Query);
+                if (queryDict != null && queryDict.Get("url") != null)
+                {
+                    uri = new UriBuilder(HttpUtility.UrlDecode(queryDict.Get("url"))).Uri;
+                }
             }
-            else
-            {
-                return domainToCheck.Equals(domain, StringComparison.OrdinalIgnoreCase);
-            }
-        }
-        /// <summary>
-        /// Performs a wildcard (*) search on any string.
-        /// </summary>
-        public static bool DoesWildcardMatch(string originalString, string searchString)
-        {
-            if (!searchString.StartsWith("*"))
-            {
-                int stop = searchString.IndexOf('*');
-                if (!originalString.StartsWith(searchString.Substring(0, stop)))
-                    return false;
-            }
-            if (!searchString.EndsWith("*"))
-            {
-                int start = searchString.LastIndexOf('*') + 1;
-                if (!originalString.EndsWith(searchString.Substring(start, searchString.Length - start)))
-                    return false;
-            }
-            Regex regex = new Regex(searchString.Replace(@".", @"\.").Replace(@"*", @".*"));
-            return regex.IsMatch(originalString);
+
+            return uri;
         }
 
-        // https://stackoverflow.com/a/7202560/1461004
-        private static void LeaveDotsAndSlashesEscaped()
+        private static Uri UriFollowRedirects(Uri uri, int num_redirects = 0)
         {
-            var getSyntaxMethod =
-                typeof(UriParser).GetMethod("GetSyntax", BindingFlags.Static | BindingFlags.NonPublic);
-            if (getSyntaxMethod == null)
+            int max_redirects = 20;
+            if (num_redirects >= max_redirects)
             {
-                throw new MissingMethodException("UriParser", "GetSyntax");
+                return uri;
+            }
+            System.Diagnostics.Debug.WriteLine("Url " + num_redirects + " " + uri.Host);
+            StringCollection url_shortners = Settings.Default.URLShortners;
+            Form SplashScreen = null;
+            if (!Program.uriExpanderThreadStop &&
+                (url_shortners.Contains(uri.Host) || Settings.Default.ExpandUrl == "Follow all redirects"))
+            {
+                //Thread.Sleep(2000);
+                if (num_redirects == 0)
+                {
+                    SplashScreen = new frm_SplashScreen();
+                    var splashThread = new Thread(new ThreadStart(() => Application.Run(SplashScreen)));
+                    splashThread.Start();
+                }
+                HttpWebResponse response = MyWebRequest(uri);
+                if (response != null)
+                {
+                    if ((int)response.StatusCode > 299 && (int)response.StatusCode < 400)
+                    {
+                        uri = UriFollowRedirects(new UriBuilder(response.Headers["Location"]).Uri, (num_redirects + 1));
+                    }
+                    else
+                    {
+                        uri = response.ResponseUri;
+                    }
+                }
             }
 
-            var uriParser = getSyntaxMethod.Invoke(null, new object[] { "http" });
-
-            var setUpdatableFlagsMethod =
-                uriParser.GetType().GetMethod("SetUpdatableFlags", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (setUpdatableFlagsMethod == null)
+            if (num_redirects == 0)
             {
-                throw new MissingMethodException("UriParser", "SetUpdatableFlags");
+                if (SplashScreen != null && !SplashScreen.Disposing && !SplashScreen.IsDisposed)
+                    try
+                    {
+                        Program.uriExpanderThreadStop = true;
+                        SplashScreen.Invoke(new Action(() => SplashScreen.Close()));
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine(ex);
+                    }
+            }
+            return uri;
+        }
+
+        private static HttpWebResponse MyWebRequest(Uri uri)
+        {
+            //Support TLS1.2 - updated .Net framework - no longer needed
+            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | (SecurityProtocolType)768 | (SecurityProtocolType)3072 | SecurityProtocolType.Ssl3; //SecurityProtocolType.Tls12;
+            var webRequest = (HttpWebRequest)WebRequest.Create(uri.AbsoluteUri);
+            // Set timeout - needs to be high enough for HTTP request to succeed on slow network connections,
+            // but fast enough not to slow down BrowserSelect startup too much.
+            // 2 seconds seems about right
+            webRequest.Timeout = 2000;
+            //webRequest.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv: 85.0) Gecko/20100101 Firefox/85.0";
+            webRequest.AllowAutoRedirect = false;
+            HttpWebResponse response = null;
+            try
+            {
+                var ar = webRequest.BeginGetResponse(null, null);
+                Program.webRequestThread = webRequest;
+                ThreadPool.RegisterWaitForSingleObject(ar.AsyncWaitHandle, new WaitOrTimerCallback(TimeoutCallback), webRequest, webRequest.Timeout, true);
+                response = (HttpWebResponse)webRequest.EndGetResponse(ar);
+                response.Close();
+            }
+            catch (WebException ex)
+            {
+                // We are mostly catch up webRequest.Abort() or webRequest errors here (e.g. untrusted certificates)
+                // No action required.
+                System.Diagnostics.Debug.WriteLine(ex);
             }
 
-            setUpdatableFlagsMethod.Invoke(uriParser, new object[] { 0 });
+            return response;
+        }
+
+        // Abort the request if the timer fires.
+        private static void TimeoutCallback(object state, bool timedOut)
+        {
+            if (timedOut)
+            {
+                HttpWebRequest request = state as HttpWebRequest;
+                if (request != null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Timed out, aborting HTTP request...");
+                    request.Abort();
+                }
+            }
         }
     }
 }

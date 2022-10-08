@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Runtime.InteropServices;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrowserSelect.Properties;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 
 namespace BrowserSelect
 {
@@ -14,14 +16,21 @@ namespace BrowserSelect
     {
 
         public Form1 mainForm;
+        private DataTable rules;
+
+        public frm_settings()
+        {
+            InitializeComponent();
+            this.Icon = Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        }
 
         public frm_settings(Form mainForm)
         {
             this.mainForm = (Form1)mainForm;
             InitializeComponent();
+            this.Icon = Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
         }
 
-        private List<AutoMatchRule> rules = new List<AutoMatchRule>();
         private void frm_settings_Load(object sender, EventArgs e)
         {
             //check if browser select is the default browser or not
@@ -38,24 +47,149 @@ namespace BrowserSelect
 
             //populate list of browsers for Rule List ComboBox
             var browsers = BrowserFinder.find();
-            var c = ((DataGridViewComboBoxColumn)gv_filters.Columns["browser"]);
+            DataGridViewComboBoxColumn c = ((DataGridViewComboBoxColumn)gv_filters.Columns["browser"]);
+            List<string> enabled_browsers = new List<string>();
 
             foreach (Browser b in browsers)
             {
                 browser_filter.Items.Add(b, !Settings.Default.HideBrowsers.Contains(b.Identifier));
                 c.Items.Add(b.ToString());
+                enabled_browsers.Add(b.ToString());
             }
             // add browser select to the list
             c.Items.Add("display BrowserSelect");
+            enabled_browsers.Add("display BrowserSelect");
+            cmbo_default_browser.DataSource = enabled_browsers;
+            if (Settings.Default.DefaultBrowser == null ||
+                Settings.Default.DefaultBrowser == "" ||
+                !enabled_browsers.Contains(Settings.Default.DefaultBrowser))
+                cmbo_default_browser.SelectedItem = "display BrowserSelect";
+            else
+                cmbo_default_browser.SelectedItem = Settings.Default.DefaultBrowser;
 
             //populate Rules in the gridview
-            foreach (var rule in Settings.Default.AutoBrowser)
-                rules.Add(rule);
-            var bs = new BindingSource();
-            bs.DataSource = rules;
-            gv_filters.DataSource = bs;
+            if (Settings.Default.Rules != null && Settings.Default.Rules != "")
+                load_rules();
+            else if (Settings.Default.AutoBrowser != null)
+            {
+                load_legacy_rules();
+                Settings.Default.DefaultBrowser = cmbo_default_browser.SelectedItem.ToString();
+                save_rules();
+                Settings.Default.Save();
+            }
 
             chk_check_update.Checked = Settings.Default.check_update != "nope";
+            chk_launch_settings.Checked = (Boolean)Settings.Default.LaunchToSettings;
+        }
+
+        private Boolean check_rules()
+        {
+            Boolean rules_ok = true;
+            for (int row_num = 0; row_num < gv_filters.Rows.Count-1; ++row_num)
+            {
+                for (int col_num = 0; col_num < gv_filters.Columns.Count; ++col_num)
+                {
+                    if (gv_filters[col_num, row_num].Value == null || gv_filters[col_num, row_num].Value.ToString() == "")
+                    {
+                        rules_ok = false;
+                        gv_filters[col_num, row_num].Style.BackColor = Color.Tomato;
+                    }
+                    else
+                        gv_filters[col_num, row_num].Style.BackColor = SystemColors.Window;
+                }
+            }
+            return rules_ok;
+        }
+
+        /*
+         * Cells that are highlighted by check_rules are returned to normal when clicked.
+         */
+        private void gv_filters_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            ((DataGridView)sender).CurrentCell.Style.BackColor = SystemColors.Window;
+        }
+
+        /*
+         * Expand combobox when the cells is clicked.
+         * Note: Tried this on Enter but it meant cells were expanded in unwanted circumstances (e.g. on Form Load).
+         */
+        private void gv_filters_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            bool validClick = (e.RowIndex != -1 && e.ColumnIndex != -1); //Make sure the clicked row/column is valid.
+            var dgv = sender as DataGridView;
+
+            // Check to make sure the cell clicked is the cell containing the combobox 
+            if (e.ColumnIndex > 0 && dgv.Columns[e.ColumnIndex] is DataGridViewComboBoxColumn && validClick)
+            {
+                dgv.BeginEdit(true);
+                ((ComboBox)dgv.EditingControl).DroppedDown = true;
+            }
+        }
+
+        private void save_rules()
+        {
+            Settings.Default.Rules = JsonConvert.SerializeObject(rules);
+        }
+
+        private void load_rules()
+        {
+            rules = (DataTable)JsonConvert.DeserializeObject(Settings.Default.Rules, (typeof(DataTable)));
+            gv_filters.DataSource = rules;
+        }
+
+        private void load_legacy_rules()
+        {
+            rules = new DataTable();
+            for (int i = 0; i < gv_filters.Columns.Count; ++i)
+            {
+                rules.Columns.Add(new DataColumn(gv_filters.Columns[i].DataPropertyName));
+            }
+            gv_filters.AutoGenerateColumns = false;
+            foreach (string rule in Settings.Default.AutoBrowser)
+            {
+                string[] ss = rule.Split(new[] { "[#!][$~][?_]" }, StringSplitOptions.None);
+                string pattern = ss[0];
+                string browser = ss[1];
+                string comp_type;
+                if (pattern == "*")
+                    cmbo_default_browser.SelectedItem = browser;
+                else
+                {
+                    int count = 0;
+                    foreach (var c in pattern.ToCharArray())
+                        if (c == '*')
+                            count++;
+
+                    //replace "*." at start of string with "*" to align with legacy code
+                    if (pattern.StartsWith("*."))
+                        pattern = "*" + pattern.Substring(2, pattern.Length - 2);
+
+                    if (!pattern.Contains("*"))
+                        comp_type = "Matches";
+                    else if (pattern.StartsWith("*") && count == 1)
+                    {
+                        comp_type = "Ends With";
+                        pattern = pattern.Substring(1, pattern.Length - 1);
+                    }
+                    else if (pattern.EndsWith("*") && count == 1)
+                    {
+                        comp_type = "Starts With";
+                        pattern = pattern.Substring(0, pattern.Length - 1);
+                    }
+                    else if (pattern.StartsWith("*") && pattern.EndsWith("*") && count == 2)
+                    {
+                        comp_type = "Contains";
+                        pattern = pattern.Substring(1, pattern.Length - 2);
+                    }
+                    else
+                    {
+                        comp_type = "RegEx";
+                        pattern = pattern.Replace(@".", @"\.").Replace(@"*", @".*");
+                    }
+                    rules.Rows.Add(comp_type, "Domain", pattern, browser);
+                }
+            }
+            gv_filters.DataSource = rules;
         }
 
         private void btn_setdefault_Click(object sender, EventArgs e)
@@ -112,32 +246,15 @@ namespace BrowserSelect
 
         private void btn_apply_Click(object sender, EventArgs e)
         {
-            //save rules
-
-            //clear rules (instead of checking for changes we just overwrite the whole ruleset)
-            Settings.Default.AutoBrowser.Clear();
-            foreach (var rule in rules)
+            if (check_rules())
             {
-                //check if rule has both pattern and browser defined
-                if (rule.valid())
-                    //add it to rule list
-                    Settings.Default.AutoBrowser.Add(rule.ToString());
-                else
-                {
-                    //ignore rule if both pattern and browser is empty otherwise inform user of missing part
-                    var err = rule.error();
-                    if (err.Length > 0)
-                    {
-                        MessageBox.Show("Invalid Rule: " + err);
-                    }
-                }
-
+                save_rules();
+                Settings.Default.DefaultBrowser = cmbo_default_browser.SelectedItem.ToString();
+                Settings.Default.Save();
+                //Enabled property of apply button is used as a flag for unsaved changes
+                btn_apply.Enabled = false;
+                btn_cancel.Text = "Close";
             }
-            //save rules
-            Settings.Default.Save();
-            //Enabled property of apply button is used as a flag for unsaved changes
-            btn_apply.Enabled = false;
-            btn_cancel.Text = "Close";
         }
 
         private frm_help_rules _frmHelp;
@@ -202,10 +319,13 @@ namespace BrowserSelect
                     btn.UseVisualStyleBackColor = true;
                     btn.Enabled = true;
                 }
-                catch (Exception) { }
+                catch (Exception ex) {
+                    Debug.WriteLine(ex);
+                }
                 return x;
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
+
         private void chk_check_update_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.check_update = (((CheckBox)sender).Checked) ? "0" : "nope";
@@ -226,55 +346,88 @@ namespace BrowserSelect
             // add browser select to the list
             c.Items.Add("display BrowserSelect");
 
-            this.mainForm.updateBrowsers();
+            if (mainForm != null)
+                this.mainForm.updateBrowsers();
+            else
+                browsers = BrowserFinder.find().Where(b => !Settings.Default.HideBrowsers.Contains(b.Identifier)).ToList();
         }
 
         private void gv_filters_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             // to prevent System.ArgumentException: DataGridViewComboBoxCell value is not valid MessageBoxes
         }
-    }
-    class AutoMatchRule
-    {
-        public string Pattern { get; set; }
-        public string Browser { get; set; }
 
-        public static implicit operator AutoMatchRule(System.String s)
+         private void btn_expandurls_Click(object sender, EventArgs e)
         {
-            var ss = s.Split(new[] { "[#!][$~][?_]" }, StringSplitOptions.None);
-            return new AutoMatchRule()
+            (new frm_settings_urlexpander()).ShowDialog();
+        }
+
+        private void btn_up_Click(object sender, EventArgs e)
+        {
+            DataGridView dgv = gv_filters;
+            try
             {
-                Pattern = ss[0],
-                Browser = ss[1]
-            };
-        }
-
-        public override string ToString()
-        {
-            return Pattern + "[#!][$~][?_]" + Browser;
-        }
-
-        public string error()
-        {
-            if (!string.IsNullOrEmpty(Pattern))
-                return string.Format("You forgot to select a Browser for '{0}' rule.", Pattern);
-            else if (!string.IsNullOrEmpty(Browser))
-                return "one of your rules has an Empty pattern. please refer to Help for more information.";
-            else
-                return "";
-        }
-
-        public bool valid()
-        {
-            try //because they may be null
-            {
-                return Browser.Length > 0 && Pattern.Length > 0;
+                int totalRows = dgv.Rows.Count;
+                // get index of the row for the selected cell
+                int rowIndex = dgv.SelectedCells[0].OwningRow.Index;
+                if (rowIndex == 0)
+                    return;
+                // get index of the column for the selected cell
+                int colIndex = dgv.SelectedCells[0].OwningColumn.Index;
+                DataRow selectedRow = rules.Rows[rowIndex];
+                DataRow row = rules.NewRow();
+                for (int i = 0; i < gv_filters.Columns.Count; ++i)
+                    row[i] = selectedRow[i];
+                rules.Rows.Remove(selectedRow);
+                rules.Rows.InsertAt(row, rowIndex - 1);
+                dgv.ClearSelection();
+                dgv.Rows[rowIndex - 1].Cells[colIndex].Selected = true;
+                dgv.CurrentCell = dgv[colIndex, rowIndex - 1];
+                //set the unsaved changes flag to true
+                btn_apply.Enabled = true;
+                btn_cancel.Text = "Cancel";
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                Debug.WriteLine(ex);
             }
+        }
 
+        private void btn_down_Click(object sender, EventArgs e)
+        {
+            DataGridView dgv = gv_filters;
+            try
+            {
+                int totalRows = dgv.Rows.Count;
+                // get index of the row for the selected cell
+                int rowIndex = dgv.SelectedCells[0].OwningRow.Index;
+                if (rowIndex == totalRows - 1)
+                    return;
+                // get index of the column for the selected cell
+                int colIndex = dgv.SelectedCells[0].OwningColumn.Index;
+                DataRow selectedRow = rules.Rows[rowIndex];
+                DataRow row = rules.NewRow();
+                for (int i = 0; i < gv_filters.Columns.Count; ++i)
+                    row[i] = selectedRow[i];
+                rules.Rows.Remove(selectedRow);
+                rules.Rows.InsertAt(row, rowIndex + 1);
+                dgv.ClearSelection();
+                dgv.Rows[rowIndex + 1].Cells[colIndex].Selected = true;
+                dgv.CurrentCell = dgv[colIndex, rowIndex + 1];
+                //set the unsaved changes flag to true
+                btn_apply.Enabled = true;
+                btn_cancel.Text = "Cancel";
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        private void chk_launch_settings_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Default.LaunchToSettings = ((CheckBox)sender).Checked;
+            Settings.Default.Save();
         }
     }
 }

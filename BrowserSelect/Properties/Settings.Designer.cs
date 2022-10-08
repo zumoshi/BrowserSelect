@@ -12,7 +12,7 @@ namespace BrowserSelect.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -90,6 +90,76 @@ namespace BrowserSelect.Properties {
             }
             set {
                 this["BrowserList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Never")]
+        public string ExpandUrl {
+            get {
+                return ((string)(this["ExpandUrl"]));
+            }
+            set {
+                this["ExpandUrl"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection URLShortners {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["URLShortners"]));
+            }
+            set {
+                this["URLShortners"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection URLProcessors {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["URLProcessors"]));
+            }
+            set {
+                this["URLProcessors"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultBrowser {
+            get {
+                return ((string)(this["DefaultBrowser"]));
+            }
+            set {
+                this["DefaultBrowser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Rules {
+            get {
+                return ((string)(this["Rules"]));
+            }
+            set {
+                this["Rules"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LaunchToSettings {
+            get {
+                return ((bool)(this["LaunchToSettings"]));
+            }
+            set {
+                this["LaunchToSettings"] = value;
             }
         }
     }
