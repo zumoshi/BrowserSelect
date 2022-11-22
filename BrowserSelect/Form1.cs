@@ -19,6 +19,7 @@ namespace BrowserSelect
         public Form1()
         {
             InitializeComponent();
+            MaximizeBox = false;
         }
 
         public void updateBrowsers()
@@ -253,7 +254,12 @@ namespace BrowserSelect
             }
             else
             {
-                Process.Start(b.exec, Program.Args2Str(args));
+                ProcessStartInfo startInfo = new ProcessStartInfo(b.exec);
+                // Clicking MS Edge takes more than 4 seconds to load, even with an existing window
+                // Disabling UseShellExecute to create the process directly from the browser executable file
+                startInfo.UseShellExecute = false;
+                startInfo.Arguments = Program.Args2Str(args);
+                Process.Start(startInfo);
             }
             Application.Exit();
         }
@@ -284,7 +290,15 @@ namespace BrowserSelect
             var top = wa.Height / 2 + wa.Top - Height / 2;
 
             this.Location = new Point(left, top);
-            this.Activate();
+
+            
+            // Borrowed from https://stackoverflow.com/a/5853542
+            // Get the window to the front
+            this.TopMost = true;
+            this.TopMost = false;
+
+            // "Steal" the focus
+            this.Activate();            
         }
 
         private void btn_help_Click(object sender, EventArgs e)
