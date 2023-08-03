@@ -7,12 +7,23 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrowserSelect.Properties;
+using System.Web;
+using System.Net;
+using System.Threading;
 
 namespace BrowserSelect
 {
     static class Program
     {
-        public static string url = "http://google.com/";
+        public static string url = "";
+        public static HttpWebRequest webRequestThread = null;
+        public static bool uriExpanderThreadStop = false;
+        public static (string name, string domain)[] defaultUriExpander = new(string name, string domain)[]
+            {
+                ("Outlook safe links", "safelinks.protection.outlook.com")//,
+                //("Test1", "test.com"),
+                //("Test2", "test2.com")
+            };
 
         /// <summary>
         /// The main entry point for the application.
@@ -20,7 +31,6 @@ namespace BrowserSelect
         [STAThread]
         static void Main(string[] args)
         {
-
             // fix #28
             LeaveDotsAndSlashesEscaped();
             // to prevent loss of settings when on update
@@ -43,6 +53,35 @@ namespace BrowserSelect
                 var uc = new UpdateChecker();
                 Task.Factory.StartNew(() => uc.check());
             }
+            //load URL Shortners
+            string[] defultUrlShortners = new string[] {
+                "adf.ly",
+                "bit.do",
+                "bit.ly",
+                "goo.gl",
+                "ht.ly",
+                "is.gd",
+                "ity.im",
+                "lnk.co",
+                "ow.ly",
+                "q.gs",
+                "rb.gy",
+                "rotf.lol",
+                "t.co",
+                "tiny.one",
+                "tinyurl.com"
+            };
+            if (Settings.Default.URLShortners == null)
+            {
+                StringCollection url_shortners = new StringCollection();
+                url_shortners.AddRange(defultUrlShortners);
+                Settings.Default.URLShortners = url_shortners;
+                Settings.Default.Save();
+            }
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
             //checking if a url is being opened or app is ran from start menu (without arguments)
             if (args.Length > 0)
             {
@@ -50,6 +89,9 @@ namespace BrowserSelect
                 url = args[0];
                 //add http:// to url if it is missing a protocol
                 var uri = new UriBuilder(url).Uri;
+                uri = UriExpander(uri);
+                if (Settings.Default.ExpandUrl != null && Settings.Default.ExpandUrl != "Never")
+                    uri = UriFollowRedirects(uri);
                 url = uri.AbsoluteUri;
 
                 foreach (var sr in Settings.Default.AutoBrowser.Cast<string>()
@@ -81,9 +123,12 @@ namespace BrowserSelect
             }
 
             // display main form
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            //Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
+            if (url == "" && (Boolean)Settings.Default.LaunchToSettings)
+                Application.Run(new frm_settings());
+            else
+                Application.Run(new Form1());
         }
 
         // from : http://stackoverflow.com/a/250400/1461004
@@ -206,6 +251,127 @@ namespace BrowserSelect
             }
 
             setUpdatableFlagsMethod.Invoke(uriParser, new object[] { 0 });
+        }
+
+        private static Uri UriExpander(Uri uri)
+        {
+            List<string> enabled_url_expanders = new List<string>();
+            if (Settings.Default.URLProcessors != null)
+            {
+                foreach ((string name, string domain) in defaultUriExpander)
+                {
+                    if (Settings.Default.URLProcessors.Contains(name))
+                    {
+                        enabled_url_expanders.Add(domain);
+                    }
+                }
+            }
+
+            System.Diagnostics.Debug.WriteLine("URLExpander: " + uri.Host);
+            if (uri.Host.EndsWith("safelinks.protection.outlook.com") &&
+                enabled_url_expanders.Contains("safelinks.protection.outlook.com"))
+            {
+                var queryDict = HttpUtility.ParseQueryString(uri.Query);
+                if (queryDict != null && queryDict.Get("url") != null)
+                {
+                    uri = new UriBuilder(HttpUtility.UrlDecode(queryDict.Get("url"))).Uri;
+                }
+            }
+
+            return uri;
+        }
+        private static Uri UriFollowRedirects(Uri uri, int num_redirects = 0)
+        {
+            int max_redirects = 20;
+            if (num_redirects >= max_redirects)
+            {
+                return uri;
+            }
+            System.Diagnostics.Debug.WriteLine("Url " + num_redirects + " " + uri.Host);
+            StringCollection url_shortners = Settings.Default.URLShortners;
+            Form SplashScreen = null;
+            if (!Program.uriExpanderThreadStop &&
+                (url_shortners.Contains(uri.Host) || Settings.Default.ExpandUrl == "Follow all redirects"))
+            {
+                //Thread.Sleep(2000);
+                if (num_redirects == 0)
+                {
+                    SplashScreen = new frm_SplashScreen();
+                    var splashThread = new Thread(new ThreadStart(() => Application.Run(SplashScreen)));
+                    splashThread.Start();
+                }
+                HttpWebResponse response = MyWebRequest(uri);
+                if (response != null)
+                {
+                    if ((int)response.StatusCode > 299 && (int)response.StatusCode < 400)
+                    {
+                        uri = UriFollowRedirects(new UriBuilder(response.Headers["Location"]).Uri, (num_redirects + 1));
+                    }
+                    else
+                    {
+                        uri = response.ResponseUri;
+                    }
+                }
+            }
+
+            if (num_redirects == 0)
+            {
+                if (SplashScreen != null && !SplashScreen.Disposing && !SplashScreen.IsDisposed)
+                    try
+                    {
+                        Program.uriExpanderThreadStop = true;
+                        SplashScreen.Invoke(new Action(() => SplashScreen.Close()));
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine(ex);
+                    }
+            }
+            return uri;
+        }
+
+        private static HttpWebResponse MyWebRequest(Uri uri)
+        {
+            //Support TLS1.2 - updated .Net framework - no longer needed
+            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | (SecurityProtocolType)768 | (SecurityProtocolType)3072 | SecurityProtocolType.Ssl3; //SecurityProtocolType.Tls12;
+            var webRequest = (HttpWebRequest)WebRequest.Create(uri.AbsoluteUri);
+            // Set timeout - needs to be high enough for HTTP request to succeed on slow network connections,
+            // but fast enough not to slow down BrowserSelect startup too much.
+            // 2 seconds seems about right
+            webRequest.Timeout = 2000;
+            //webRequest.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv: 85.0) Gecko/20100101 Firefox/85.0";
+            webRequest.AllowAutoRedirect = false;
+            HttpWebResponse response = null;
+            try
+            {
+                var ar = webRequest.BeginGetResponse(null, null);
+                Program.webRequestThread = webRequest;
+                ThreadPool.RegisterWaitForSingleObject(ar.AsyncWaitHandle, new WaitOrTimerCallback(TimeoutCallback), webRequest, webRequest.Timeout, true);
+                response = (HttpWebResponse)webRequest.EndGetResponse(ar);
+                response.Close();
+            }
+            catch (WebException ex)
+            {
+                // We are mostly catch up webRequest.Abort() or webRequest errors here (e.g. untrusted certificates)
+                // No action required.
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+
+            return response;
+        }
+
+        // Abort the request if the timer fires.
+        private static void TimeoutCallback(object state, bool timedOut)
+        {
+            if (timedOut)
+            {
+                HttpWebRequest request = state as HttpWebRequest;
+                if (request != null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Timed out, aborting HTTP request...");
+                    request.Abort();
+                }
+            }
         }
     }
 }

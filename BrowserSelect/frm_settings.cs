@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,10 +16,17 @@ namespace BrowserSelect
 
         public Form1 mainForm;
 
+        public frm_settings()
+        {
+            InitializeComponent();
+            this.Icon = Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        }
+
         public frm_settings(Form mainForm)
         {
             this.mainForm = (Form1)mainForm;
             InitializeComponent();
+            this.Icon = Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
         }
 
         private List<AutoMatchRule> rules = new List<AutoMatchRule>();
@@ -56,6 +64,12 @@ namespace BrowserSelect
             gv_filters.DataSource = bs;
 
             chk_check_update.Checked = Settings.Default.check_update != "nope";
+            chk_launch_settings.Checked = (Boolean)Settings.Default.LaunchToSettings;
+            
+            // TODO move this to expand_url form
+            //cmbo_expand_url.DataSource = (new string[] { "Never", "First Redirect", "All Redirects" });
+            //cmbo_expand_url.SelectedItem = Settings.Default.expand_url;
+
         }
 
         private void btn_setdefault_Click(object sender, EventArgs e)
@@ -202,7 +216,9 @@ namespace BrowserSelect
                     btn.UseVisualStyleBackColor = true;
                     btn.Enabled = true;
                 }
-                catch (Exception) { }
+                catch (Exception ex) {
+                    Debug.WriteLine(ex);
+                }
                 return x;
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
@@ -226,12 +242,32 @@ namespace BrowserSelect
             // add browser select to the list
             c.Items.Add("display BrowserSelect");
 
-            this.mainForm.updateBrowsers();
+            if (mainForm != null)
+                this.mainForm.updateBrowsers();
+            else
+                browsers = BrowserFinder.find().Where(b => !Settings.Default.HideBrowsers.Contains(b.Identifier)).ToList();
         }
 
         private void gv_filters_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             // to prevent System.ArgumentException: DataGridViewComboBoxCell value is not valid MessageBoxes
+        }
+
+        private void cmbo_expand_url_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            Settings.Default.ExpandUrl = (string)((ComboBox)sender).SelectedItem;
+            Settings.Default.Save();
+        }
+
+         private void btn_expandurls_Click(object sender, EventArgs e)
+        {
+            (new frm_settings_urlexpander()).ShowDialog();
+        }
+
+        private void chk_launch_settings_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Default.LaunchToSettings = ((CheckBox)sender).Checked;
+            Settings.Default.Save();
         }
     }
     class AutoMatchRule
@@ -270,8 +306,9 @@ namespace BrowserSelect
             {
                 return Browser.Length > 0 && Pattern.Length > 0;
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex);
                 return false;
             }
 

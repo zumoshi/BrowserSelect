@@ -36,7 +36,7 @@ namespace BrowserSelect
             var req = (HttpWebRequest)WebRequest.Create("https://github.com/zumoshi/BrowserSelect/releases/latest");
             // make webrequest use tls 1.2 instead of ssl3 (#43)
             ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+            //ServicePointManager.SecurityProtocol = (SecurityProtocolType)768 | (SecurityProtocolType)3072;
             req.Method = "HEAD";
             req.AllowAutoRedirect = false;
             using (var res = req.GetResponse())
@@ -53,7 +53,9 @@ namespace BrowserSelect
                 current_version = ((Func<String, String>)((x) => x.Substring(0, x.Length - 2)))(Application.ProductVersion);
                 init = true;
             }
-            catch (Exception) { }
+            catch (Exception ex) {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
         }
 
         bool new_version()

@@ -50,15 +50,18 @@ namespace BrowserSelect
         }
 
         private void Form1_Load(object sender, EventArgs e)
-        {   
+        {
             this.AutoSize = true;
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             this.KeyPreview = true;
-            this.Text = Program.url;
             // set the form icon from .exe file icon
             this.Icon = IconExtractor.fromFile(Application.ExecutablePath);
             // create a wildcard rule for this domain (always button)
-            _alwaysRule = generate_rule(Program.url);
+            if (Program.url != "")
+            {
+                _alwaysRule = generate_rule(Program.url);
+                this.Text = Program.url;
+            }
             // check for new version
             if (Settings.Default.last_version != "nope")
             {
@@ -161,7 +164,9 @@ namespace BrowserSelect
                 x = parts[count - 2]; //second-level
                 y = parts[count - 3]; //third-level
             }
-            catch (IndexOutOfRangeException) { } // in case domain did not have 3 parts.. (e.g. localhost, google.com)
+            catch (IndexOutOfRangeException ex) {
+                Debug.WriteLine(ex);
+            } // in case domain did not have 3 parts.. (e.g. localhost, google.com)
 
             // creating the patterns
             var rule_tld = String.Format("*.{0}.{1}", x, tld);
