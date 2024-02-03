@@ -34,7 +34,7 @@ namespace BrowserSelect
         /// also gives said window focus (setForegroundWindow)
         /// </summary>
         /// <param name="hwnd">hWnd of window to be restored</param>
-        public static void RestoreWindow(int hwnd)
+        public static void RestoreWindow(long hwnd)
         {
 
             var hWnd = new IntPtr(hwnd);
